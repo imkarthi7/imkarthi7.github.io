@@ -153,20 +153,16 @@ run this from the project folder, then open http://localhost:8123 (press Ctrl+C 
 python3 -m http.server 8123
 ```
 
-## Deploying to GitHub Pages
+## Publishing updates
 
-1. Sign in at github.com and create a **new repository** (the "+" menu → New repository), for example
-   `loreal-cv`. Make it **Public** (Pages on free accounts needs a public repo) and leave "Add a README"
-   unticked.
-2. Upload the site. The simplest way is in the browser: on the new repo's page, click
-   **uploading an existing file**. Drag in `index.html`, `styles.css`, `main.js`, `content.js`,
-   `README.md` and the `assets` folder, but leave out the source images `aisle.png` and
-   `bottle-pair.png` (if present). Then click **Commit changes**. (The `tools` folder is optional.)
-3. Open the repo's **Settings → Pages**. Under "Build and deployment", set **Source** to
-   "Deploy from a branch", **Branch** to `main`, and **folder** to `/ (root)`. Click **Save**.
-4. Wait about a minute and refresh that Settings page. It will show
-   `https://<your-username>.github.io/loreal-cv/`. Open it and check the site on your phone too.
-5. To update later, edit `content.js` locally, then upload it again the same way (**Add file →
-   Upload files**, then commit). Pages redeploys within a minute or so.
+The site is live at **https://imkarthi7.github.io**, served by GitHub Pages from the `main` branch of
+`github.com/imkarthi7/imkarthi7.github.io`. After editing (for example `content.js`), publish with:
+
+```bash
+cd ~/Documents/loreal-cv && git add -A && git commit -m "Update content" && git push
+```
+
+GitHub rebuilds the site in about a minute. `.gitignore` keeps the source images (`aisle.png`,
+`bottle-pair.png`), `.psd` files and Mac/Python clutter out of the repository.
 
 Before sharing the link, search `content.js` for `TODO:` and make sure nothing is left.
