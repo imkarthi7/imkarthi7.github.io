@@ -7,9 +7,12 @@
 <meta name="description" content="">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400&family=Figtree:wght@400;500;600&display=swap">
+<!-- Fonts load without blocking the first paint (system fallbacks show until they arrive). -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400&family=Figtree:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400&family=Figtree:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400&family=Figtree:wght@400;500;600&display=swap"></noscript>
 <link rel="icon" href="favicon.png" type="image/png">
-<link rel="stylesheet" href="styles.css?v=20260927005047">
+<link rel="stylesheet" href="styles.css?v=20260927012431">
 <!-- Scroll "camera" (scenes 1–4). Pinned versions; if either fails to load, the site
      falls back to five normal sections. -->
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" integrity="sha512-oJ8QbaQThQoJZ7oEv+29jfPM6CcP+zUxh3PKJs1vyOhx0UraUrE7PQgeItu3dOuCJyrzWpoYMsVjkkPEBzbUqw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -71,7 +74,7 @@
       <div class="bottle-scene__stage">
         <div class="bottle bottle--pinned" data-bottle="front"></div>
       </div>
-      <aside class="panel" data-panel="front" aria-live="polite"></aside>
+      <div class="panel-slot"><aside class="panel" data-panel="front" aria-live="polite"></aside></div>
     </div>
     <a class="next" href="#back" data-text="front.next"></a>
   </section>
@@ -86,7 +89,7 @@
       <div class="bottle-scene__stage">
         <div class="bottle bottle--pinned" data-bottle="back"></div>
       </div>
-      <aside class="panel" data-panel="back" aria-live="polite"></aside>
+      <div class="panel-slot"><aside class="panel" data-panel="back" aria-live="polite"></aside></div>
     </div>
     <a class="next" href="#fin" data-text="back.next"></a>
   </section>
@@ -110,7 +113,7 @@
   </section>
 </main>
 
-<script src="content.js?v=20260927005047"></script>
-<script src="main.js?v=20260927005047"></script>
+<script src="content.js?v=20260927012431"></script>
+<script src="main.js?v=20260927012431"></script>
 </body>
 </html>

@@ -156,10 +156,22 @@ window.CONTENT = {
       side: "front",
       label: "Brand I relate to",
       part: "Inspired by",
-      pin: { x: 63.5, y: 77.6, side: "right" },
+      pin: { x: 67, y: 77.6, side: "right" },
       hotspot: { x: 34, y: 71, w: 32, h: 13.5 },
-      title: "TODO: The L’Oréal brand I relate to, headline",
-      paragraphs: ["TODO: Why this brand"],
+      title: "L'Oréal Paris",
+      // Optional photo at the top of the panel (made with tools/prep-gallery.py).
+      media: {
+        src: "assets/gallery/loreal-products.webp",
+        thumb: "assets/gallery/loreal-products-480.webp",
+        width: 1024,
+        height: 768,
+        alt: "My own L'Oréal Paris products: Hyaluron Pure shampoo, Extraordinary Oil serum, Hyaluron Moisture conditioner",
+      },
+      paragraphs: [
+        "My entry into L'Oréal Paris was the Extraordinary Oil serum. A friend let me try it, and I liked it instantly: my hair felt smooth, never heavy.",
+        "It simply delivered. The quality was great, it did exactly what it promised, and it felt worth every rupee. That made me curious, and slowly one bottle became a shelf of them.",
+        "That's why I relate to it. It earned my trust by delivering, not by claiming, and that's how I'd like to earn yours. It's also why my own bottle carries an \"Inspired by\" stamp.",
+      ],
     },
     {
       id: "beauty",

@@ -20,6 +20,38 @@
   if (cine) document.documentElement.classList.add("is-cine");
   var cineApi = null; // set by initCine(): { scrollFor(id) }
 
+  /* ---------- aisle photo first: it is the largest thing on the first screen ---------- */
+
+  var aisleImg = C.aisle.image;
+  var aislePic = document.querySelector("[data-aisle-image]");
+  var aisleSrc = document.createElement("source");
+  aisleSrc.type = "image/webp";
+  aisleSrc.srcset = aisleImg.webpSmall + " 800w, " + aisleImg.webp + " 1536w";
+  aisleSrc.sizes = "100vw";
+  var aisleEl = document.createElement("img");
+  aisleEl.src = aisleImg.jpg;
+  aisleEl.alt = aisleImg.alt;
+  aisleEl.setAttribute("fetchpriority", "high");
+  aislePic.appendChild(aisleSrc);
+  aislePic.appendChild(aisleEl);
+  // The scroll camera's foreground packs are part of the first screen, so they go
+  // in now rather than once GSAP has loaded (initCine() picks them up; the plain
+  // fallback removes them).
+  var earlyPacks = [];
+  if (cine && aisleImg.packsLeft && aisleImg.packsRight) {
+    var aisleScene = document.getElementById("aisle");
+    var aisleCard = aisleScene.querySelector(".aisle__card");
+    [["left", aisleImg.packsLeft], ["right", aisleImg.packsRight]].forEach(function (pk) {
+      var img = document.createElement("img");
+      img.className = "cine-packs cine-packs--" + pk[0];
+      img.src = pk[1];
+      img.alt = "";
+      img.setAttribute("fetchpriority", "high");
+      aisleScene.insertBefore(img, aisleCard);
+      earlyPacks.push(img);
+    });
+  }
+
   /* ---------- helpers ---------- */
 
   function get(path) {
@@ -78,14 +110,18 @@
     return p;
   }
 
-  function goTo(id) {
+  // opts.push: add a history entry, so the browser's Back button returns to the
+  // previous scene (default true). opts.instant: jump without smooth scrolling.
+  function goTo(id, opts) {
+    opts = opts || {};
     var target = document.getElementById(id);
     if (!target) return;
     closeAllPanels(false);
+    var behavior = opts.instant || reduceMotion ? "auto" : "smooth";
     if (cineApi) {
       // Scenes 1–4 share one pinned timeline: scroll to that scene's moment in it,
       // then move focus once the scene is on screen (hidden elements can't take focus).
-      window.scrollTo({ top: cineApi.scrollFor(id), behavior: "smooth" });
+      window.scrollTo({ top: cineApi.scrollFor(id), behavior: behavior });
       var done = false;
       var land = function () {
         if (done) return;
@@ -95,14 +131,28 @@
       window.addEventListener("scrollend", land, { once: true });
       setTimeout(land, 1500);
     } else {
-      target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+      target.scrollIntoView({ behavior: behavior, block: "start" });
       target.focus({ preventScroll: true });
     }
-    if (history.replaceState) history.replaceState(null, "", "#" + id);
+    if (opts.push === false || location.hash === "#" + id) return;
+    history.pushState({ scene: id }, "", "#" + id);
   }
 
-  // While a panel is open in the scroll version, the page doesn't scroll, so no
-  // scroll animation can run underneath it.
+  // Back/Forward buttons and hand-typed #scene links.
+  function sceneFromHash() {
+    var id = decodeURIComponent(location.hash.slice(1));
+    return SCENES.indexOf(id) === -1 ? null : id;
+  }
+  window.addEventListener("popstate", function () {
+    goTo(sceneFromHash() || "aisle", { push: false });
+  });
+  window.addEventListener("hashchange", function () {
+    var id = sceneFromHash();
+    if (id) goTo(id, { push: false });
+  });
+
+  // While a panel is open in the scroll version, or a sheet is open on a small
+  // screen, the page behind it doesn't scroll (so no scroll animation runs under it).
   function lockScroll(on) {
     document.documentElement.classList.toggle("is-locked", on);
   }
@@ -161,18 +211,6 @@
 
   /* ---------- scene 1: aisle ---------- */
 
-  var aisleImg = C.aisle.image;
-  var aislePic = document.querySelector("[data-aisle-image]");
-  var aisleSrc = document.createElement("source");
-  aisleSrc.type = "image/webp";
-  aisleSrc.srcset = aisleImg.webpSmall + " 800w, " + aisleImg.webp + " 1536w";
-  aisleSrc.sizes = "100vw";
-  var aisleEl = document.createElement("img");
-  aisleEl.src = aisleImg.jpg;
-  aisleEl.alt = aisleImg.alt;
-  aisleEl.setAttribute("fetchpriority", "high");
-  aislePic.appendChild(aisleSrc);
-  aislePic.appendChild(aisleEl);
 
   /* ---------- bottles ---------- */
 
@@ -285,6 +323,7 @@
     close.addEventListener("click", function () { closeSheet(side); });
     panel.appendChild(close);
 
+    if (sec.media) panel.appendChild(panelPhoto(sec.media));
     panel.appendChild(fill(el("p", "panel__part"), sec.part));
     var title = fill(el("h3", "panel__title"), sec.title);
     title.tabIndex = -1;
@@ -306,6 +345,22 @@
     return title;
   }
 
+  // Photo at the top of a panel. width/height reserve its space before it loads.
+  function panelPhoto(m) {
+    var fig = el("figure", "panel__photo");
+    var img = document.createElement("img");
+    img.src = m.thumb || m.src;
+    if (m.thumb) img.srcset = m.thumb + " " + Math.round(480 * m.width / Math.max(m.width, m.height)) + "w, " + m.src + " " + m.width + "w";
+    img.sizes = "(min-width: 1024px) 420px, calc(100vw - 48px)";
+    img.width = m.width;
+    img.height = m.height;
+    img.alt = m.alt;
+    img.decoding = "async";
+    if (isTodo(m.alt)) fig.classList.add("todo");
+    fig.appendChild(img);
+    return fig;
+  }
+
   function select(side, id, opener) {
     var state = scenes[side];
     var sec = C.sections.filter(function (s) { return s.id === id; })[0];
@@ -316,12 +371,32 @@
       state.pins[k].setAttribute("aria-pressed", String(k === id));
       state.pins[k].classList.toggle("is-active", k === id);
     });
+    clearTimeout(state.closing);
     var title = renderPanel(side, sec);
+    anchorSheet(state, state.pins[id]);
+    state.panel.style.transform = "";
     state.panel.classList.add("is-open");
-    if (cineApi) lockScroll(true);
-    // Bottom sheet (narrow screens): move focus into it so keyboard and screen
-    // reader users land on the text. Side panel: aria-live announces it.
-    if (!sideBySide.matches) title.focus({ preventScroll: true });
+    if (cineApi || !sideBySide.matches) lockScroll(true);
+    // Move focus into the panel so keyboard and screen reader users land on the
+    // text; Esc or ✕ sends it back to the pin.
+    title.focus({ preventScroll: true });
+  }
+
+  // Small screens: open the sheet on the side of the bottle area with more room
+  // around the active pin, and stop it short of the pin, so the pin stays in view.
+  function anchorSheet(state, pin) {
+    var p = state.panel;
+    if (sideBySide.matches || !pin) {
+      p.removeAttribute("data-anchor");
+      p.style.maxHeight = "";
+      return;
+    }
+    var slot = p.parentNode.getBoundingClientRect();
+    var r = pin.getBoundingClientRect();
+    var above = r.top - slot.top - 12;
+    var below = slot.bottom - r.bottom - 12;
+    p.setAttribute("data-anchor", below >= above ? "bottom" : "top");
+    p.style.maxHeight = Math.max(Math.max(above, below), 140) + "px";
   }
 
   function closeSheet(side, refocus) {
@@ -330,12 +405,61 @@
       state.pins[k].setAttribute("aria-pressed", "false");
       state.pins[k].classList.remove("is-active");
     });
-    renderEmpty(side);
     lockScroll(false);
     var back = state.opener && state.opener.classList.contains("pin") ? state.opener : state.pins[Object.keys(state.pins)[0]];
     state.current = null;
     if (back && refocus !== false) back.focus({ preventScroll: true });
+    if (sideBySide.matches) {
+      renderEmpty(side);
+    } else {
+      // Let the sheet animate out before its content is swapped for the empty state.
+      state.panel.classList.remove("is-open");
+      clearTimeout(state.closing);
+      state.closing = setTimeout(function () {
+        renderEmpty(side);
+        state.panel.style.transform = "";
+      }, reduceMotion ? 0 : 300);
+    }
   }
+
+  // Sheet gestures (small screens): swipe it back toward its edge, or tap
+  // anywhere outside it (other than a pin), to close.
+  ["front", "back"].forEach(function (side) {
+    var state = scenes[side];
+    var p = state.panel;
+    var startY = null, dy = 0;
+    p.addEventListener("touchstart", function (e) {
+      if (sideBySide.matches || !p.classList.contains("is-open")) return;
+      var fromTop = p.getAttribute("data-anchor") === "top";
+      // Only when the sheet's own content isn't mid-scroll.
+      if (!fromTop && p.scrollTop > 0) return;
+      if (fromTop && p.scrollTop + p.clientHeight < p.scrollHeight - 1) return;
+      startY = e.touches[0].clientY;
+      dy = 0;
+    }, { passive: true });
+    p.addEventListener("touchmove", function (e) {
+      if (startY === null) return;
+      var dir = p.getAttribute("data-anchor") === "top" ? -1 : 1;
+      dy = (e.touches[0].clientY - startY) * dir;
+      if (dy <= 0) return;
+      p.classList.add("is-dragging");
+      p.style.transform = "translateY(" + dy * dir + "px)";
+    }, { passive: true });
+    p.addEventListener("touchend", function () {
+      if (startY === null) return;
+      startY = null;
+      p.classList.remove("is-dragging");
+      if (dy > 70) closeSheet(side);
+      else p.style.transform = "";
+    });
+  });
+  document.addEventListener("click", function (e) {
+    if (sideBySide.matches) return;
+    if (e.target.closest(".panel, .pin, .hotspot, .steps, .next")) return;
+    ["front", "back"].forEach(function (side) {
+      if (scenes[side].panel.classList.contains("is-open")) closeSheet(side);
+    });
+  });
 
   function closeAllPanels(refocus) {
     ["front", "back"].forEach(function (side) {
@@ -344,7 +468,7 @@
   }
 
   document.addEventListener("keydown", function (e) {
-    if (e.key !== "Escape" || (sideBySide.matches && !cineApi)) return;
+    if (e.key !== "Escape") return;
     closeAllPanels();
   });
 
@@ -523,6 +647,40 @@
   window.addEventListener("load", layoutWall);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(layoutWall);
 
+  /* ---------- preloading the next scenes ---------- */
+
+  // The brand panel's photo, fetched and decoded before anyone opens it.
+  var brandDone = false;
+  function preloadBrand() {
+    if (brandDone) return;
+    brandDone = true;
+    C.sections.forEach(function (sec) {
+      if (!sec.media) return;
+      var img = panelPhoto(sec.media).querySelector("img");
+      if (img.decode) img.decode().catch(function () {});
+    });
+  }
+  // Fin's photo and the photo wall: switch from lazy to eager so they are in
+  // before Fin scrolls into view.
+  var finDone = false;
+  function preloadFin() {
+    if (finDone) return;
+    finDone = true;
+    document.querySelectorAll("#fin img[loading=lazy]").forEach(function (img) { img.loading = "eager"; });
+  }
+  // Without the scroll camera: start both once the Front scene comes into view.
+  if ("IntersectionObserver" in window) {
+    var preIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting || document.documentElement.classList.contains("is-cine")) return;
+        preloadBrand();
+        preloadFin();
+        preIO.disconnect();
+      });
+    });
+    preIO.observe(document.getElementById("front"));
+  }
+
   /* ---------- observers: current step + one fade-in per scene ---------- */
 
   var sceneEls = SCENES.map(function (id) { return document.getElementById(id); });
@@ -620,6 +778,8 @@
 
     var card = aisle.querySelector(".aisle__card");
     function packs(src, side) {
+      var early = aisle.querySelector(".cine-packs--" + side);
+      if (early) return early;
       var img = document.createElement("img");
       img.className = "cine-packs cine-packs--" + side;
       img.src = src;
@@ -641,7 +801,7 @@
     fb.insertBefore(light, fb.querySelector(".bottle__stamp"));
 
     function ui(scene) {
-      return scene.querySelectorAll(".bottle-scene__head, .pin, .hotspot, .panel, .scene--bottle > .next");
+      return scene.querySelectorAll(".bottle-scene__head, .pin, .hotspot, .panel-slot, .scene--bottle > .next");
     }
 
     // --- geometry (re-measured on every refresh/resize) ---
@@ -668,7 +828,11 @@
       return { x: x, y: y, w: node.offsetWidth, h: node.offsetHeight };
     }
 
-    var PUSH = 1.45; // camera zoom by the end of the aisle segment
+    // One continuous camera move from the aisle into the spot (0–2.5), on the
+    // site's single easing curve. PUSH is where it is when the bottle appears.
+    var EASE = "power2.inOut";
+    var ZOOM = 2.4;
+    var PUSH = 1 + (ZOOM - 1) * gsap.parseEase(EASE)(1.2 / 2.5);
     function start() {
       var s = spot();
       var b = box(fb);
@@ -686,15 +850,15 @@
 
     var TOTAL = 5.1;
     var tl = gsap.timeline({
-      defaults: { ease: "none" },
+      defaults: { ease: EASE },
       scrollTrigger: {
         trigger: journey,
         start: "top top",
         end: function () { return "+=" + Math.round(window.innerHeight * TOTAL); },
         pin: true,
-        // Follow the scroll directly: any smoothing here reads as lag, and native
-        // scrolling (trackpad, touch, Chrome/Safari wheel) is already smooth.
-        scrub: true,
+        // A short catch-up (0.25s) smooths out mouse-wheel steps and touch jitter
+        // without the lag a longer value causes.
+        scrub: 0.25,
         anticipatePin: 1,
         invalidateOnRefresh: true,
       },
@@ -704,13 +868,12 @@
     tl.addLabel("aisle", 0);
     tl.fromTo(camera,
       { scale: 1, transformOrigin: function () { var s = spot(); return s.x + "px " + s.y + "px"; } },
-      { scale: PUSH, duration: 1.2 }, 0);
+      { scale: ZOOM, duration: 2.5 }, 0);
     tl.fromTo(packsL, { x: 0, scale: 1 }, { x: function () { return -window.innerWidth * 0.45; }, scale: 1.25, duration: 1.2 }, 0);
     tl.fromTo(packsR, { x: 0, scale: 1 }, { x: function () { return window.innerWidth * 0.45; }, scale: 1.25, duration: 1.2 }, 0);
     tl.to(card, { autoAlpha: 0, y: -24, duration: 0.3 }, 0.85);
 
-    // 2. Shelf
-    tl.to(camera, { scale: 2.4, duration: 1.3 }, 1.2);
+    // 2. Shelf (the camera keeps moving in: see above)
     tl.fromTo(blur, { opacity: 0 }, { opacity: 1, duration: 0.8 }, 1.3);
     tl.to(camera, { opacity: 0.35, duration: 0.7 }, 1.8);
     tl.set(front, { autoAlpha: 1 }, 1.2);
@@ -720,7 +883,7 @@
     tl.set(fb, { willChange: "transform" }, 1.19);
     tl.fromTo(fb,
       { x: function () { return start().x; }, y: function () { return start().y; }, scale: function () { return start().scale; } },
-      { x: 0, y: 0, scale: 1, duration: 1.1, ease: "power2.inOut" }, 1.4);
+      { x: 0, y: 0, scale: 1, duration: 1.1 }, 1.4);
     tl.set(fb, { willChange: "auto" }, 2.5);
     tl.fromTo(glow, { opacity: 0 }, { opacity: 1, duration: 0.3 }, 1.2);
     tl.to(glow, { opacity: 0.45, duration: 0.4 }, 2.1);
@@ -737,6 +900,7 @@
     // 4. Turn, then Back (hold)
     tl.to(ui(front), { autoAlpha: 0, duration: 0.15 }, 3.5);
     tl.to(glow, { opacity: 0, duration: 0.15 }, 3.5);
+    // The turn: squeeze in then out, the two halves of one power2.inOut motion.
     tl.fromTo(fb, { scaleX: 1 }, { scaleX: 0.04, duration: 0.2, ease: "power2.in", immediateRender: false }, 3.65);
     tl.set(front, { autoAlpha: 0 }, 3.85);
     tl.set(back, { autoAlpha: 1 }, 3.85);
@@ -762,6 +926,9 @@
     });
     function updateStep() {
       var y = window.scrollY;
+      // Fetch what the next scenes show before they arrive.
+      if (st.progress > 0.35) preloadBrand();
+      if (st.progress > 0.65) preloadFin();
       if (finTop && y > finTop - window.innerHeight * 0.5) return setCurrent("fin");
       var t = st.progress * tl.duration();
       setCurrent(t < 1.2 ? "aisle" : t < 2.5 ? "shelf" : t < 3.75 ? "front" : "back");
@@ -770,7 +937,19 @@
     finTop = fin.getBoundingClientRect().top + window.scrollY;
 
     // Images load after layout: re-measure once they have.
-    window.addEventListener("load", function () { ST.refresh(); });
+    // Decode both faces of the bottle up front, so the turn never waits on it.
+    [fb.querySelector("picture img"), bb.querySelector("picture img"), light].forEach(function (img) {
+      if (img && img.decode) img.decode().catch(function () {});
+    });
+
+    // Images load after layout: re-measure once they have. Then honour a #scene
+    // link (e.g. …/#back): the browser's own jump can't know where that scene
+    // sits in the pinned timeline.
+    window.addEventListener("load", function () {
+      ST.refresh();
+      var id = sceneFromHash();
+      if (id && id !== "aisle") goTo(id, { push: false, instant: true });
+    });
 
     cineApi = { scrollFor: scrollFor };
     updateStep();
@@ -780,6 +959,7 @@
 
   function startStatic() {
     document.documentElement.classList.remove("is-cine");
+    earlyPacks.forEach(function (img) { img.remove(); });
     startSceneSteps();
     revealAfterLoad(sceneEls);
   }
