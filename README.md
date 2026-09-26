@@ -6,7 +6,7 @@ Open `index.html` directly in a browser, or serve the folder from anywhere (GitH
 The page is five full-screen scenes, reached by normal scrolling, by each scene's button, or by the
 step bar at the top:
 
-1. **Aisle:** store photo, headline, the four shelf talkers. Button: "Walk in".
+1. **Aisle:** store photo, headline and subline. Button: "Walk in".
 2. **Shelf:** the bottle glowing among blurred packs. Button: "Pick it up".
 3. **Front:** the bottle front with labelled pins (About me, Fun facts, Passions, Brand I relate to,
    What beauty means). Button: "Turn it around".
@@ -25,7 +25,7 @@ ScrollTrigger (loaded from cdnjs, pinned to 3.15.0 with integrity hashes):
 
 | Scroll (screen heights) | What happens |
 |---|---|
-| 0 – 1.2 | Camera pushes into the aisle; foreground packs slide out; shelf talkers fade in, then the card fades out |
+| 0 – 1.2 | Camera pushes into the aisle; foreground packs slide out; the headline card fades out |
 | 1.2 – 2.5 | The bottle appears on the counter, glowing; the aisle blurs and fades while the bottle grows to full size |
 | 2.5 – 3.5 | Front: holds; labels and panel appear |
 | 3.5 – 4.1 | The bottle turns (squeeze and swap) to the back |
@@ -57,7 +57,7 @@ What's where in `content.js`:
 |---|---|
 | `meta` | Browser-tab title and search description |
 | `steps` | The five labels in the step bar |
-| `aisle` | Store photo, its size, alt text, blurred copy, foreground pack layers and the bottle's `spot`; headline, the four shelf talkers, "Walk in" |
+| `aisle` | Store photo, its size, alt text, blurred copy, foreground pack layers and the bottle's `spot`; headline, subline, "Walk in" |
 | `shelf` | The one line above the shelf, "Pick it up" |
 | `bottle` | Bottle image paths, alt text and pixel size, the brand name in the "Inspired by" circle, `debugHotspots` |
 | `front`, `back` | Each bottle scene's heading, hint line and button |

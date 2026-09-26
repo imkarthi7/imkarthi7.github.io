@@ -10,3 +10,7 @@ __pycache__/
 
 # Local tooling
 .claude/
+
+# Only the résumé PDF is published; other PDFs dropped in assets/ stay local
+assets/*.pdf
+!assets/resume.pdf

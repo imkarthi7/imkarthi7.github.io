@@ -174,14 +174,6 @@
   aislePic.appendChild(aisleSrc);
   aislePic.appendChild(aisleEl);
 
-  var talkerList = document.querySelector("[data-talkers]");
-  C.aisle.talkers.forEach(function (t) {
-    var li = el("li", "talker");
-    li.appendChild(fill(el("span", "talker__label"), t.label));
-    li.appendChild(fill(el("span", "talker__value"), t.value));
-    talkerList.appendChild(li);
-  });
-
   /* ---------- bottles ---------- */
 
   // Size tokens: aspect ratio, and a cap at half the native pixel size so the
@@ -455,7 +447,7 @@
   /* ---------- scroll camera (scenes 1–4) ----------
    * One pinned ScrollTrigger timeline. Only transform and opacity are
    * animated. Timeline units ≈ screen heights of scrolling:
-   *   0.0–1.2  Aisle: camera pushes toward the spot, packs slide out, talkers in/out
+   *   0.0–1.2  Aisle: camera pushes toward the spot, packs slide out, headline card fades out
    *   1.2–2.5  Shelf: bottle appears on the spot glowing, aisle blurs and fades,
    *            bottle grows to full size
    *   2.5–3.5  Front: hold; labels and panel appear
@@ -507,7 +499,6 @@
     var packsL = packs(A.packsLeft, "left");
     var packsR = packs(A.packsRight, "right");
 
-    var talkers = card.querySelectorAll(".talker");
     var fb = front.querySelector(".bottle");
     var bb = back.querySelector(".bottle");
 
@@ -584,7 +575,6 @@
       { scale: PUSH, duration: 1.2 }, 0);
     tl.fromTo(packsL, { x: 0, scale: 1 }, { x: function () { return -window.innerWidth * 0.45; }, scale: 1.25, duration: 1.2 }, 0);
     tl.fromTo(packsR, { x: 0, scale: 1 }, { x: function () { return window.innerWidth * 0.45; }, scale: 1.25, duration: 1.2 }, 0);
-    tl.from(talkers, { autoAlpha: 0, y: 14, stagger: 0.06, duration: 0.2 }, 0.05);
     tl.to(card, { autoAlpha: 0, y: -24, duration: 0.3 }, 0.85);
 
     // 2. Shelf

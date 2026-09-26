@@ -47,14 +47,8 @@ window.CONTENT = {
       // How tall the bottle looks at that spot, as a fraction of the photo height.
       spotHeight: 0.085,
     },
-    headline: "TODO: Hero headline",
-    // Shelf talkers: the price-strip tags.
-    talkers: [
-      { label: "Outlets visited", value: "TODO: xxxx" },
-      { label: "Distributors met", value: "TODO: xxxx" },
-      { label: "Towns covered", value: "TODO: xxxx" },
-      { label: "Km travelled", value: "TODO: xxxx" },
-    ],
+    headline: "Karthik. Who?",
+    subline: "Scroll to find out.",
     next: "Walk in",
   },
 
