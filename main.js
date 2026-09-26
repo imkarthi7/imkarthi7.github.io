@@ -391,6 +391,138 @@
     links.appendChild(li);
   });
 
+  /* ---------- Fin photo wall ---------- */
+
+  // Every photo in content.js. Phones: a grid below the Fin block (CSS only).
+  // From 768px: laid out by layoutWall() into the free space around the block.
+  var scene5 = document.getElementById("fin");
+  var finBlock = scene5.querySelector(".fin");
+  var stepBar = document.querySelector(".steps");
+  var gal = document.querySelector("[data-gallery]");
+  var photos = f.gallery || [];
+  var wide = window.matchMedia("(min-width: 768px)");
+  var tiles = [];
+
+  function wobble(i) { var x = Math.sin(i * 12.9898 + 4.1) * 43758.5453; return x - Math.floor(x); } // stable 0–1
+
+  if (!photos.length) {
+    gal.remove();
+  } else {
+    gal.setAttribute("aria-label", f.galleryLabel);
+    photos.forEach(function (p, i) {
+      var li = el("li", "polaroid");
+      // Tilt ±2–4°, alternating, a little different each time.
+      li.style.setProperty("--tilt", ((i % 2 ? 1 : -1) * (2 + 2 * wobble(i + 7))).toFixed(2) + "deg");
+      var fig = document.createElement("figure");
+      fig.tabIndex = 0; // brightens on focus, like on hover
+      var img = document.createElement("img");
+      var long = Math.max(p.width, p.height);
+      img.src = p.thumb || p.src;
+      img.srcset = (p.thumb ? p.thumb + " " + Math.round(480 * p.width / long) + "w, " : "") + p.src + " " + p.width + "w";
+      img.sizes = "(min-width: 768px) 170px, 33vw";
+      img.width = p.width;
+      img.height = p.height;
+      img.alt = p.alt;
+      img.loading = "lazy";
+      img.decoding = "async";
+      fig.appendChild(img);
+      if (isTodo(p.alt)) fig.classList.add("todo");
+      if (p.caption) fig.appendChild(fill(el("figcaption", "polaroid__caption"), p.caption));
+      li.appendChild(fig);
+      gal.appendChild(li);
+      tiles.push(li);
+    });
+  }
+
+  // Tile the scene with a grid of slots and drop every slot that would touch the
+  // Fin block or the step bar (with a margin). Of all slot sizes that leave room
+  // for every photo, use the one that leaves the fewest empty slots (bigger wins a
+  // tie). Any slots still empty get a decorative repeat of an earlier photo, so
+  // the wall has no holes. Each photo gets a small, stable offset so the wall
+  // looks hand-placed.
+  var repeats = [];
+  function layoutWall() {
+    if (!tiles.length) return;
+    if (!wide.matches) {
+      repeats.forEach(function (r) { r.remove(); });
+      repeats = [];
+      gal.classList.remove("is-placed");
+      tiles.forEach(function (li) { li.hidden = false; li.style.left = li.style.top = li.style.width = ""; });
+      return;
+    }
+    var sr = scene5.getBoundingClientRect();
+    var W = sr.width, H = sr.height;
+    var fr = finBlock.getBoundingClientRect();
+    var br = stepBar.getBoundingClientRect();
+    var keepOut = [
+      { l: fr.left - sr.left - 28, t: fr.top - sr.top - 28, r: fr.right - sr.left + 28, b: fr.bottom - sr.top + 28 },
+      // The bar is fixed at the top of the screen: keep its band clear when Fin is in view.
+      { l: br.left - 16, t: -1, r: br.right + 16, b: br.bottom + 16 },
+    ];
+    function clear(x) {
+      return keepOut.every(function (k) { return x.r <= k.l || x.l >= k.r || x.b <= k.t || x.t >= k.b; });
+    }
+    var N = tiles.length, M = 12, RATIO = 1.16; // polaroid height ≈ 1.16 × width
+    var best = null;
+    for (var s = 240; s >= 60; s -= 1) {
+      var cols = Math.floor((W - 2 * M) / s), rows = Math.floor((H - 2 * M) / (s * RATIO));
+      if (cols < 1 || rows < 1) continue;
+      var cw = (W - 2 * M) / cols, ch = (H - 2 * M) / rows;
+      var pw = Math.min(cw, ch / RATIO) * 0.84, ph = pw * RATIO;
+      var free = [];
+      for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) {
+        var cx = M + cw * (c + 0.5), cy = M + ch * (r + 0.5);
+        // +8px all round covers the tilt.
+        if (clear({ l: cx - pw / 2 - 8, t: cy - ph / 2 - 8, r: cx + pw / 2 + 8, b: cy + ph / 2 + 8 })) free.push({ cx: cx, cy: cy });
+      }
+      var cand = { free: free, pw: pw, ph: ph, cw: cw, ch: ch };
+      if (free.length >= N) {
+        if (!best || best.free.length < N || free.length - N < best.free.length - N) best = cand;
+      } else if (!best) {
+        best = cand; // not enough room anywhere yet (tiny screen): keep as fallback
+      }
+      if (best && best.free.length === N) break;
+    }
+    if (!best) return;
+
+    // Repeats for any leftover slots: images only, hidden from screen readers and
+    // the keyboard.
+    repeats.forEach(function (r) { r.remove(); });
+    repeats = [];
+    for (var j = N; j < best.free.length; j++) {
+      var copy = tiles[(j - N) % N].cloneNode(true);
+      copy.setAttribute("aria-hidden", "true");
+      copy.classList.add("polaroid--repeat");
+      var cf = copy.querySelector("figure");
+      cf.removeAttribute("tabindex");
+      copy.querySelector("img").alt = "";
+      copy.style.setProperty("--tilt", ((j % 2 ? 1 : -1) * (2 + 2 * wobble(j + 7))).toFixed(2) + "deg");
+      gal.appendChild(copy);
+      repeats.push(copy);
+    }
+    var all = tiles.concat(repeats);
+
+    all.forEach(function (li, i) {
+      if (i >= best.free.length) { li.hidden = true; return; } // only if the screen is tiny
+      li.hidden = false;
+      var slot = best.free[i];
+      var dx = (wobble(i) - 0.5) * (best.cw - best.pw) * 0.7;
+      var dy = (wobble(i + 31) - 0.5) * (best.ch - best.ph) * 0.7;
+      var box = { l: slot.cx - best.pw / 2 + dx - 8, t: slot.cy - best.ph / 2 + dy - 8, r: slot.cx + best.pw / 2 + dx + 8, b: slot.cy + best.ph / 2 + dy + 8 };
+      if (!clear(box)) { dx = 0; dy = 0; }
+      li.style.left = (slot.cx - best.pw / 2 + dx).toFixed(1) + "px";
+      li.style.top = (slot.cy - best.ph / 2 + dy).toFixed(1) + "px";
+      li.style.width = best.pw.toFixed(1) + "px";
+    });
+    gal.classList.add("is-placed");
+  }
+
+  layoutWall();
+  var wallTimer;
+  window.addEventListener("resize", function () { clearTimeout(wallTimer); wallTimer = setTimeout(layoutWall, 120); });
+  window.addEventListener("load", layoutWall);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(layoutWall);
+
   /* ---------- observers: current step + one fade-in per scene ---------- */
 
   var sceneEls = SCENES.map(function (id) { return document.getElementById(id); });

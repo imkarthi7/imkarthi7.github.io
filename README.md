@@ -100,6 +100,23 @@ media: { type: "video", src: "assets/karthik.mp4", alt: "Karthik introducing him
 
 The slot is the same size either way (4:5 portrait), so the layout doesn't change.
 
+## The Fin photo collage
+
+`fin.gallery` in `content.js` lists the photos that fill the Fin page. From 768px wide they cover the
+whole screen around the Fin block as tilted polaroids, placed automatically so they never touch the
+block or the step bar (any leftover gaps get a repeat of an earlier photo). On phones they form a
+3-column grid below the block. Order runs left to right, top to bottom. Add or remove as many as you like.
+
+To add or swap a photo, put the original anywhere in `assets/photos/` (it is never published), then run:
+
+```bash
+python3 tools/prep-gallery.py assets/photos/IMG_1234.jpg
+```
+
+It writes a 1200px and a 480px WebP to `assets/gallery/` with **all metadata removed** (no GPS
+location), handles `.heic`, and prints the line to paste into `gallery`. Give each photo a real `alt`
+(what's in it, for screen readers); `caption` is optional.
+
 ## Swapping the résumé
 
 Replace `assets/resume.pdf` with your real résumé, **keeping the same file name**. If you use a

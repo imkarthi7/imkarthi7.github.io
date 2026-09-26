@@ -18,3 +18,7 @@ assets/*.pdf
 # Original phone photos (full size, with location metadata): publish only the
 # stripped, resized copy (e.g. assets/karthik.jpg)
 assets/IMG_*
+
+# Original photos for the collage (full size, with location metadata):
+# only the stripped copies in assets/gallery/ are published
+assets/photos/

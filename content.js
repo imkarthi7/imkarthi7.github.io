@@ -76,7 +76,7 @@ window.CONTENT = {
     width: 354,
     height: 852,
     // Text printed inside the "Inspired by" circle (shown on screens 768px and wider).
-    brandStamp: "TODO: Brand name",
+    brandStamp: "L'Oréal Paris",
     // Set to true (or add ?debug to the page address) to outline every tappable
     // area and pin anchor on the bottle, so you can adjust the numbers below.
     debugHotspots: false,
@@ -230,8 +230,45 @@ window.CONTENT = {
     email: "imkarthi7@gmail.com",
     linkedinLabel: "LinkedIn",
     linkedin: "https://www.linkedin.com/in/karthik-jeyakumar/",
-    fineprint: "Batch MICA-26. Loreal'26",
-    credits: "All my friends and family",
+    fineprint: "Batch MICA-26",
+    credits: "Photos: friends and family",
     backToAisle: "Back to the aisle",
+
+    /*
+     * Photo wall: every photo here fills the Fin page around the content (on
+     * phones, a grid below it). Order runs left to right, top to bottom.
+     * Make each photo with tools/prep-gallery.py, which strips location data and
+     * prints the line to paste here. `caption` is optional (a few words, shown on
+     * the polaroid's bottom edge).
+     */
+    galleryLabel: "Photos",
+    gallery: [
+      { src: "assets/gallery/285818b6-6593-444a-ba24.webp", thumb: "assets/gallery/285818b6-6593-444a-ba24-480.webp", width: 1200, height: 675, alt: "Selfie in a stockroom stacked with cartons and sacks" },
+      { src: "assets/gallery/01e66c5e-a9a9-4d03-94d4.webp", thumb: "assets/gallery/01e66c5e-a9a9-4d03-94d4-480.webp", width: 1200, height: 900, alt: "In a red stole with a friend at an evening graduation" },
+      { src: "assets/gallery/img-9411.webp", thumb: "assets/gallery/img-9411-480.webp", width: 1200, height: 900, alt: "With two friends beside the Cricket World Cup trophy at its trophy-tour stop" },
+      { src: "assets/gallery/20180410162611-img-5119.webp", thumb: "assets/gallery/20180410162611-img-5119-480.webp", width: 1200, height: 800, alt: "A row of classmates in matching shirts on a campus lawn" },
+      { src: "assets/gallery/img-2953.webp", thumb: "assets/gallery/img-2953-480.webp", width: 900, height: 1200, alt: "Friends lying on the grass in a circle, heads together" },
+      { src: "assets/gallery/img-5595.webp", thumb: "assets/gallery/img-5595-480.webp", width: 1200, height: 800, alt: "Chatting with a man in a woollen cap on a street corner" },
+      { src: "assets/gallery/52d50981-a085-4b00-ac35.webp", thumb: "assets/gallery/52d50981-a085-4b00-ac35-480.webp", width: 1200, height: 900, alt: "A big group of friends crowded onto a sofa" },
+      { src: "assets/gallery/5c769503-3cf2-44d9-86a4.webp", thumb: "assets/gallery/5c769503-3cf2-44d9-86a4-480.webp", width: 1200, height: 900, alt: "Standing by a wall painted with the words 'What if it all works out'" },
+      { src: "assets/gallery/99fb6e7a-c619-47ee-8654.webp", thumb: "assets/gallery/99fb6e7a-c619-47ee-8654-480.webp", width: 1200, height: 900, alt: "A cricket team photo on a floodlit turf, bats in hand" },
+      { src: "assets/gallery/img-9691.webp", thumb: "assets/gallery/img-9691-480.webp", width: 1200, height: 900, alt: "Sitting on stone steps by the river, next to sleeping dogs and a cow" },
+      { src: "assets/gallery/img-5377.webp", thumb: "assets/gallery/img-5377-480.webp", width: 900, height: 1200, alt: "With family outside a building" },
+      { src: "assets/gallery/20190928163936-img-0284.webp", thumb: "assets/gallery/20190928163936-img-0284-480.webp", width: 1200, height: 800, alt: "In a cap and striped T-shirt, hand to mouth, outdoors" },
+      { src: "assets/gallery/dez-2684.webp", thumb: "assets/gallery/dez-2684-480.webp", width: 1200, height: 800, alt: "Friends in red and white dancing in a hall" },
+      { src: "assets/gallery/img-0959.webp", thumb: "assets/gallery/img-0959-480.webp", width: 1200, height: 900, alt: "Standing by a lake in a white shirt" },
+      { src: "assets/gallery/img-0749.webp", thumb: "assets/gallery/img-0749-480.webp", width: 900, height: 1200, alt: "Friends dressed in black under a big tree" },
+      { src: "assets/gallery/20240505-150300.webp", thumb: "assets/gallery/20240505-150300-480.webp", width: 1200, height: 675, alt: "Four friends sitting on a stone ledge under an old archway" },
+      { src: "assets/gallery/img-0070.webp", thumb: "assets/gallery/img-0070-480.webp", width: 1200, height: 900, alt: "A group selfie outdoors" },
+      { src: "assets/gallery/6a7c570b-36d1-4e2c-b56a.webp", thumb: "assets/gallery/6a7c570b-36d1-4e2c-b56a-480.webp", width: 1200, height: 800, alt: "Friends in festive clothes in front of a painted brick mural" },
+      { src: "assets/gallery/img-9272.webp", thumb: "assets/gallery/img-9272-480.webp", width: 900, height: 1200, alt: "With a friend in yellow against a brick wall" },
+      { src: "assets/gallery/2026-06-28-09.webp", thumb: "assets/gallery/2026-06-28-09-480.webp", width: 1200, height: 696, alt: "Two cricketers in India kit, one wearing a helmet" },
+      { src: "assets/gallery/img-3358.webp", thumb: "assets/gallery/img-3358-480.webp", width: 1200, height: 800, alt: "A group at a hilltop viewpoint with hills behind" },
+      { src: "assets/gallery/img-7008.webp", thumb: "assets/gallery/img-7008-480.webp", width: 1200, height: 900, alt: "Friends laughing together in a hallway" },
+      { src: "assets/gallery/30364e22-2562-4167-9fb3.webp", thumb: "assets/gallery/30364e22-2562-4167-9fb3-480.webp", width: 1200, height: 899, alt: "Sitting on the front steps of a house in a white shirt and mundu" },
+      { src: "assets/gallery/img-1223.webp", thumb: "assets/gallery/img-1223-480.webp", width: 1169, height: 553, alt: "Friends posing in a misty forest" },
+      { src: "assets/gallery/img-0017.webp", thumb: "assets/gallery/img-0017-480.webp", width: 1200, height: 900, alt: "Selfie with a friend" },
+      { src: "assets/gallery/img-9934.webp", thumb: "assets/gallery/img-9934-480.webp", width: 900, height: 1200, alt: "Selfie in a police-style cap at a fair" },
+    ],
   },
 };

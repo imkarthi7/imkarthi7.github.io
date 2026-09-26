@@ -570,6 +570,68 @@ span.button { background: none; color: inherit; padding-left: 0; }
   .bottle--pinned { height: min(calc(100svh - 215px), calc((100vw - 2 * var(--gutter) - 2 * var(--pin-label) - 24px) / var(--ar, 0.4155)), var(--max-h, 426px)); }
 }
 
+/* ---------- Fin photo wall ----------
+   Phones: a 3-column grid below the Fin block, page grows to fit.
+   From 768px: the photos fill the whole scene around the Fin block. main.js
+   (layoutWall) places each one in free space that never touches the block or
+   the step bar; until then they stay hidden, so nothing flashes on top. */
+.scene--fin { overflow: hidden; }
+.gallery {
+  list-style: none;
+  width: 100%;
+  max-width: 560px;
+  margin: 40px auto 8px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px 14px;
+}
+.polaroid figure {
+  margin: 0;
+  padding: 6% 6% 17%;
+  background: #f6f1e8;
+  border-radius: 2px;
+  box-shadow: 0 12px 26px -16px rgba(0, 0, 0, 0.85);
+  opacity: 0.8;
+  transform: rotate(calc(var(--tilt, 0deg) * 0.5));
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.polaroid img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; background: #2b2723; }
+.polaroid figure:hover, .polaroid figure:focus-visible { opacity: 1; }
+.polaroid figure:focus-visible { outline: 2px solid var(--paper); outline-offset: 3px; }
+.polaroid figure.todo { outline: 1.5px dashed #e27aa0; }
+.polaroid__caption {
+  margin: 6px 0 -12%;
+  font: italic 400 0.75rem/1.2 var(--serif);
+  color: var(--ink);
+  text-align: center;
+}
+@media (prefers-reduced-motion: reduce) { .polaroid figure { transition: none; } }
+
+/* The Fin block only fades (no slide), so measuring it for the wall is stable. */
+.scene--fin.is-waiting:not(.is-in) .reveal { transform: none; }
+
+@media (min-width: 768px) {
+  .fin { position: relative; z-index: 1; }
+  .gallery {
+    position: absolute;
+    inset: 0;
+    max-width: none;
+    margin: 0;
+    display: block;
+    pointer-events: none;
+    visibility: hidden;
+  }
+  .gallery.is-placed { visibility: visible; }
+  .polaroid { position: absolute; pointer-events: auto; }
+  .polaroid:hover, .polaroid:focus-within { z-index: 2; }
+  .polaroid figure { transform: rotate(var(--tilt, 0deg)); }
+  .polaroid figure:hover, .polaroid figure:focus-visible { transform: rotate(var(--tilt, 0deg)) scale(1.08); }
+}
+@media (min-width: 1024px) {
+  .fin { max-width: 720px; }
+}
+
 /* =====================================================================
    Scroll camera (html.is-cine). Scenes 1–4 become stacked layers of one
    pinned timeline driven by GSAP ScrollTrigger (see main.js). Without the
