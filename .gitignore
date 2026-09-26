@@ -14,3 +14,7 @@ __pycache__/
 # Only the résumé PDF is published; other PDFs dropped in assets/ stay local
 assets/*.pdf
 !assets/resume.pdf
+
+# Original phone photos (full size, with location metadata): publish only the
+# stripped, resized copy (e.g. assets/karthik.jpg)
+assets/IMG_*

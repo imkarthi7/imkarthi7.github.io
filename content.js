@@ -12,8 +12,8 @@
  */
 window.CONTENT = {
   meta: {
-    title: "TODO: Page title (shown in the browser tab)",
-    description: "TODO: One-line description for search results and link previews",
+    title: "Karthik wants to say something",
+    description: "Creative CV",
   },
 
   /* The small bar at the top that shows where you are and jumps between scenes. */
@@ -220,18 +220,18 @@ window.CONTENT = {
     // the .mp4 file, and (optionally) set poster to a still image.
     media: {
       type: "image",
-      src: "assets/photo-placeholder.jpg",
-      alt: "TODO: Describe your photo in one sentence",
+      src: "assets/karthik.jpg",
+      alt: "How you'll find me always",
       poster: "",
     },
     closingLine: "TODO: Closing line",
     resume: { href: "assets/resume.pdf", text: "Download résumé (PDF)" },
     emailLabel: "Email",
-    email: "TODO: you@example.com",
+    email: "imkarthi7@gmail.com",
     linkedinLabel: "LinkedIn",
-    linkedin: "TODO: https://www.linkedin.com/in/your-handle",
-    fineprint: "Manufactured in Thiruvananthapuram · Batch MICA-26",
-    credits: "TODO: Credits",
+    linkedin: "https://www.linkedin.com/in/karthik-jeyakumar/",
+    fineprint: "Batch MICA-26. Loreal'26",
+    credits: "All my friends and family",
     backToAisle: "Back to the aisle",
   },
 };
