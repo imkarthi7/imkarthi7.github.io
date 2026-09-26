@@ -1,0 +1,12 @@
+# Source images: used only by tools/, never loaded by the site
+assets/bottle-pair.png
+assets/aisle.png
+*.psd
+
+# macOS / Python
+.DS_Store
+__pycache__/
+*.pyc
+
+# Local tooling
+.claude/
