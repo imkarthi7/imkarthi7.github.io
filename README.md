@@ -176,10 +176,11 @@ The site is live at **https://imkarthi7.github.io**, served by GitHub Pages from
 `github.com/imkarthi7/imkarthi7.github.io`. After editing (for example `content.js`), publish with:
 
 ```bash
-cd ~/Documents/loreal-cv && git add -A && git commit -m "Update content" && git push
+cd ~/Documents/loreal-cv && ./tools/publish.sh "Update content"
 ```
 
-GitHub rebuilds the site in about a minute. `.gitignore` keeps the source images (`aisle.png`,
+GitHub rebuilds the site in about a minute. The script also stamps a new version onto the CSS and
+JavaScript links, so visitors get the new files on their next visit or reload instead of a cached copy. `.gitignore` keeps the source images (`aisle.png`,
 `bottle-pair.png`), `.psd` files and Mac/Python clutter out of the repository.
 
 Before sharing the link, search `content.js` for `TODO:` and make sure nothing is left.
