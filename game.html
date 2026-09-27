@@ -8,7 +8,9 @@
 <link rel="icon" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;500;700&family=Archivo:wght@400;500;700;800&display=swap">
+<!-- Fonts load without blocking the first paint; system fallbacks show until they arrive -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;700&family=Archivo:wght@400;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;700&family=Archivo:wght@400;700;800&display=swap"></noscript>
 <style>
 /* Single deliberate look: paper-white desk, ink black, L'Oréal gold. */
 :root {
@@ -17,10 +19,10 @@
   --ink-2: #26262a;
   --paper: #f3f2ef;
   --card: #ffffff;
-  --grey: #77746d;
+  --grey: #625f59;
   --line: #d9d6cf;
   --gold: #c5a052;
-  --gold-deep: #8f7032;
+  --gold-deep: #7a5f28;
   --gold-soft: #efe4c8;
   --display: "Press Start 2P", ui-monospace, "Courier New", monospace;
   --pixel: "Pixelify Sans", ui-monospace, "Courier New", monospace;
@@ -46,6 +48,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .dotgrid { background: radial-gradient(circle, #dcd9d2 1px, transparent 1.5px) 0 0 / 16px 16px, var(--paper); }
 
 .px-btn {
+  min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center;
   font-family: var(--display); font-size: 10px; letter-spacing: .06em; text-transform: uppercase;
   background: var(--card); border: 0; padding: 11px 13px; margin: 4px;
   box-shadow: 0 -4px 0 0 var(--ink), 0 4px 0 0 var(--ink), -4px 0 0 0 var(--ink), 4px 0 0 0 var(--ink), 4px 8px 0 0 var(--gold);
@@ -74,16 +77,19 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .ld-bar i.on { background: var(--gold); }
 #pct { font-family: var(--display); font-size: 9px; font-variant-numeric: tabular-nums; color: var(--grey); }
 .ld-mid { display: grid; justify-items: center; align-content: center; gap: 22px; }
-.ld-fig { position: relative; width: 100px; height: 160px; }
-.ld-fig img { width: 100px; height: 160px; display: block; position: relative; }
+.ld-fig { position: relative; width: 130px; height: 160px; }
+.ld-fig img { width: 130px; height: 160px; display: block; position: relative; }
 .ld-fig::after { content: ""; position: absolute; left: 16px; right: 16px; bottom: -6px; height: 8px; background: rgba(13,13,14,.14); }
 #ldTitle { font-family: var(--display); font-weight: 400; font-size: clamp(14px, 3vw, 20px); margin: 0; text-align: center; line-height: 1.5; }
 #ldMsg { font-size: 16px; color: var(--grey); margin: -10px 0 0; }
+#boot { grid-template-rows: auto 1fr auto auto; }
+.ld-skip { justify-self: center; margin-bottom: 14px; }
 .ld-foot { font-family: var(--display); font-size: 8px; letter-spacing: .14em; color: var(--grey); }
 
 /* ---------- Navigate pills (top-left, everywhere) ---------- */
 #nav { position: fixed; z-index: 50; top: calc(env(safe-area-inset-top, 0px) + 12px); left: 12px; display: grid; gap: 8px; justify-items: start; }
 .pill {
+  min-height: 44px;
   font-family: var(--display); font-size: 9px; letter-spacing: .04em; text-transform: lowercase;
   padding: 9px 14px; border-radius: 999px; border: 2px solid var(--ink);
   background: var(--card); color: var(--ink); box-shadow: 2px 3px 0 var(--ink);
@@ -116,7 +122,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 #desktop { display: flex; flex-direction: column; }
 .desk-main {
-  position: relative; flex: 1;
+  position: relative; flex: 1; touch-action: pan-y;
   display: grid; justify-items: center; align-content: center; gap: 30px;
   padding: 44px 16px 24px;
 }
@@ -138,9 +144,10 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .how { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 18px; margin: 0; font-family: var(--display); font-size: 8px; line-height: 1.8; letter-spacing: .08em; color: var(--grey); text-transform: uppercase; }
 .how kbd { font-family: inherit; color: var(--ink); background: var(--card); padding: 3px 5px; box-shadow: 0 2px 0 var(--ink), 0 -2px 0 var(--ink), 2px 0 0 var(--ink), -2px 0 0 var(--ink); margin: 0 2px; }
 .play-space { height: 150px; }
+@media (hover: none), (pointer: coarse), (max-width: 560px), (max-height: 500px) { .play-space { height: 290px; } }
 
 /* The walking character */
-#hero { --hw: 80px; --hh: 128px; position: absolute; left: 0; top: 0; z-index: 6; pointer-events: none; will-change: transform; }
+#hero { --hw: 104px; --hh: 128px; position: absolute; left: 0; top: 0; z-index: 6; pointer-events: none; will-change: transform; }
 #hero .fig { position: relative; width: var(--hw); height: var(--hh); }
 #hero .fig img { width: 100%; height: 100%; display: block; }
 #hero.left .fig img { transform: scaleX(-1); }
@@ -151,13 +158,13 @@ button { font: inherit; color: inherit; cursor: pointer; }
 @keyframes bob { 50% { transform: translateY(-3px); } }
 @keyframes jump { 45% { transform: translateY(-34px); } }
 .bubble {
-  position: absolute; bottom: calc(100% + 14px); left: calc(var(--hw) / 2); transform: translateX(-24px);
+  position: absolute; bottom: calc(100% + 14px); left: 0;
   width: max-content; max-width: min(250px, 70vw); padding: 9px 12px; font-size: 15px; line-height: 1.35;
   background: var(--card); box-shadow: 0 -4px 0 0 var(--ink), 0 4px 0 0 var(--ink), -4px 0 0 0 var(--ink), 4px 0 0 0 var(--ink);
 }
-.bubble::after { content: ""; position: absolute; left: 20px; bottom: -12px; width: 8px; height: 8px; background: var(--ink); box-shadow: 4px -4px 0 var(--ink); }
-#hero.edge-r .bubble { transform: translateX(calc(-100% + 24px)); }
-#hero.edge-r .bubble::after { left: auto; right: 20px; box-shadow: -4px -4px 0 var(--ink); }
+.bubble::after { content: ""; position: absolute; left: var(--tail, 20px); bottom: -12px; width: 8px; height: 8px; background: var(--ink); box-shadow: 4px -4px 0 var(--ink); }
+.bubble.beside { bottom: auto; top: 6px; }
+.bubble.beside::after { display: none; }
 .bubble b { color: var(--gold-deep); }
 .dust { position: absolute; z-index: 5; width: 6px; height: 6px; background: #cfcbc2; pointer-events: none; animation: dust .45s steps(4) forwards; }
 @keyframes dust { to { transform: translate(var(--dx), -12px) scale(.3); opacity: 0; } }
@@ -167,9 +174,10 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .desk-foot { display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: space-between; align-items: center; padding: 14px 16px; border-top: 4px solid var(--ink); background: var(--card); font-size: 15px; }
 .desk-foot .quote { font-family: var(--display); font-size: 10px; line-height: 1.7; color: var(--gold-deep); }
 .contact-line { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; }
+.contact-line a:not(.px-btn) { min-height: 44px; display: inline-flex; align-items: center; padding: 0 4px; }
 .contact-line a { color: var(--ink); text-decoration-thickness: 2px; text-underline-offset: 3px; }
 .contact-line a:hover { color: var(--gold-deep); }
-.copy { border: 0; background: none; padding: 0 4px; font-size: 14px; color: var(--gold-deep); text-decoration: underline; }
+.copy { min-height: 44px; min-width: 44px; border: 0; background: none; padding: 0 6px; font-size: 14px; color: var(--gold-deep); text-decoration: underline; }
 
 /* ---------- Folder room ---------- */
 .room-head {
@@ -192,26 +200,14 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .m-rank { white-space: nowrap; }
 .m-drops { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
 .m-drops svg { width: 9px; height: 12px; }
-.sfx { border: 0; background: none; font-family: var(--display); font-size: 8px; letter-spacing: .08em; color: inherit; padding: 6px 4px; text-transform: uppercase; opacity: .8; }
+.sfx { min-height: 44px; min-width: 44px; border: 0; background: none; font-family: var(--display); font-size: 8px; letter-spacing: .08em; color: inherit; padding: 6px 8px; text-transform: uppercase; opacity: .8; }
 .sfx:hover { color: var(--gold); opacity: 1; }
 .light .sfx { color: var(--grey); }
 .light .sfx:hover { color: var(--gold-deep); }
 
-/* Achievement pop-up */
-#ach {
-  position: fixed; z-index: 58; left: 50%; top: calc(env(safe-area-inset-top, 0px) + 74px);
-  width: min(420px, calc(100% - 32px)); transform: translateX(-50%);
-  background: var(--ink); color: #fff; padding: 14px 16px 16px; display: grid; gap: 10px;
-  box-shadow: 0 -4px 0 var(--gold), 0 4px 0 var(--gold), -4px 0 0 var(--gold), 4px 0 0 var(--gold), 6px 10px 0 4px rgba(13,13,14,.2);
-  animation: achIn .5s cubic-bezier(.3,1.5,.5,1);
-}
-#ach.out { animation: achOut .35s ease-in forwards; }
-#ach .t { display: flex; justify-content: space-between; font-family: var(--display); font-size: 9px; letter-spacing: .12em; color: var(--gold); }
-#ach p { margin: 0; font-size: 17px; }
-#ach .quest { color: #cfcbc2; }
-#ach .m-bar { flex: 1; width: auto; }
-@keyframes achIn { from { transform: translate(-50%, -40px) scale(.8); opacity: 0; } }
-@keyframes achOut { to { transform: translate(-50%, -30px); opacity: 0; } }
+.quest { position: relative; }
+.m-plus { position: absolute; right: 0; top: -2px; font-family: var(--display); font-size: 9px; color: var(--ink); background: var(--gold); padding: 3px 5px; box-shadow: 2px 2px 0 var(--ink); pointer-events: none; animation: plus 1.6s ease-out forwards; }
+@keyframes plus { 0% { transform: translateY(12px); opacity: 0; } 20% { transform: none; opacity: 1; } 75% { opacity: 1; } 100% { transform: translateY(-14px); opacity: 0; } }
 .confetti { position: fixed; top: -12px; z-index: 59; width: 8px; height: 8px; pointer-events: none; animation: fall var(--dur) cubic-bezier(.3,.1,.6,1) forwards; }
 @keyframes fall { to { transform: translate(var(--dx), 105vh) rotate(var(--rot)); } }
 
@@ -238,11 +234,11 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .room-right { display: grid; justify-items: center; gap: 16px; min-width: 0; }
 
 /* Card list: jump to any card in one click */
-.toc-wrap { position: relative; padding-left: 50px; display: grid; gap: 8px; margin-top: 4px; }
+.toc-wrap { position: relative; padding-left: 60px; display: grid; gap: 8px; margin-top: 4px; }
 .toc-head { display: flex; justify-content: space-between; gap: 10px; font-family: var(--display); font-size: 8px; letter-spacing: .12em; text-transform: uppercase; color: var(--grey); padding: 0 10px; }
 .toc { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
 .toc button {
-  width: 100%; display: grid; grid-template-columns: 30px 1fr auto; align-items: center; gap: 10px;
+  min-height: 48px; width: 100%; display: grid; grid-template-columns: 30px 1fr auto; align-items: center; gap: 10px;
   text-align: left; border: 0; background: transparent; padding: 8px 10px;
   transition: background .15s, transform .2s cubic-bezier(.3,1.4,.5,1), box-shadow .15s;
 }
@@ -256,7 +252,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .toc button[aria-current="true"] { background: var(--ink); color: #fff; transform: translateX(8px); box-shadow: 4px 4px 0 var(--gold); }
 .toc button[aria-current="true"] .n, .toc button[aria-current="true"] .mark { color: var(--gold); }
 .toc button[aria-current="true"] .t small { color: #cfcbc2; }
-#tocHero { position: absolute; left: 0; top: 0; width: 40px; height: 64px; transition: transform .38s cubic-bezier(.3,1.2,.5,1); pointer-events: none; }
+#tocHero { position: absolute; left: 0; top: 0; width: 52px; height: 64px; transition: transform .38s cubic-bezier(.3,1.2,.5,1); pointer-events: none; }
 .now { text-align: center; display: grid; gap: 6px; position: relative; z-index: 120; }
 .now h2 { font-family: var(--display); font-weight: 400; font-size: clamp(13px, 1.8vw, 18px); line-height: 1.5; margin: 0; text-wrap: balance; }
 
@@ -284,9 +280,10 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .cover .c-todo { position: absolute; right: 14px; bottom: 12px; font-family: var(--display); font-size: 7px; color: var(--gold); border: 2px dashed var(--gold); padding: 4px 6px; }
 
 .stack-ctl { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: center; }
-.dots { display: flex; gap: 8px; }
-.dots button { width: 12px; height: 12px; border: 0; padding: 0; background: var(--line); }
-.dots button[aria-current="true"] { background: var(--gold); box-shadow: 2px 2px 0 var(--ink); }
+.dots { display: flex; gap: 0; }
+.dots button { position: relative; width: 44px; height: 44px; border: 0; padding: 0; background: none; }
+.dots button::before { content: ""; position: absolute; left: 16px; top: 16px; width: 12px; height: 12px; background: var(--line); }
+.dots button[aria-current="true"]::before { background: var(--gold); box-shadow: 2px 2px 0 var(--ink); }
 .hint { font-size: 14px; color: var(--grey); text-align: center; margin: 0; }
 
 /* Opened card */
@@ -299,20 +296,25 @@ button { font: inherit; color: inherit; cursor: pointer; }
 @keyframes rise { from { transform: translateY(30px) scale(.97); opacity: 0; } }
 .detail-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 12px; background: var(--ink); color: #fff; font-family: var(--display); font-size: 8px; letter-spacing: .1em; text-transform: uppercase; }
 .detail-top .n { color: var(--gold); }
-.detail-top button { border: 0; background: none; color: #fff; font-family: var(--display); font-size: 9px; padding: 6px; }
+.detail-top button { min-height: 44px; border: 0; background: none; color: #fff; font-family: var(--display); font-size: 9px; padding: 6px 10px; }
 .detail-top button:hover { color: var(--gold); }
 .detail-body { flex: 1; overflow-y: auto; padding: 24px clamp(18px, 3vw, 32px) 26px; display: grid; align-content: start; gap: 16px; overscroll-behavior: contain; }
 .detail-body::-webkit-scrollbar { width: 8px; }
 .detail-body::-webkit-scrollbar-thumb { background: var(--ink); }
 .detail-body h3 { font-family: var(--read); font-weight: 800; font-size: clamp(26px, 3.4vw, 38px); line-height: 1.1; letter-spacing: -.01em; margin: 0; text-wrap: balance; }
 .detail-body p { margin: 0; font-family: var(--read); font-size: 19px; line-height: 1.55; max-width: 60ch; }
-.detail-body .media { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: 50% 25%; display: block; border: 4px solid var(--ink); background: var(--line); }
+.detail-body .media { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: 50% 25%; display: block; border: 3px solid var(--ink); border-radius: 12px; background: var(--line); }
 .detail-body .media.portrait { aspect-ratio: 4 / 3; }
 .detail-body .logo { height: 40px; width: auto; justify-self: start; }
 .stats { display: grid; margin: 0; border-top: 2px dashed var(--line); }
 .stats div { display: grid; grid-template-columns: 96px 1fr; gap: 12px; padding: 7px 0; border-bottom: 2px dashed var(--line); }
 .stats dt { font-family: var(--display); font-size: 8px; line-height: 2.6; color: var(--gold-deep); text-transform: uppercase; }
 .stats dd { margin: 0; font-family: var(--read); font-size: 17px; }
+.subsec { display: grid; gap: 6px; }
+.subsec h4 { margin: 4px 0 0; font-family: var(--display); font-weight: 400; font-size: 9px; line-height: 1.8; letter-spacing: .08em; color: var(--gold-deep); text-wrap: balance; }
+.detail-body .actions { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; padding-top: 4px; }
+.detail-body .actions a { text-decoration: none; color: var(--ink); }
+.detail-body .actions a.dark { color: #fff; }
 .detail-body ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
 .detail-body li { display: grid; grid-template-columns: 14px 1fr; gap: 12px; font-family: var(--read); font-size: 19px; }
 .detail-body li::before { content: ""; width: 9px; height: 9px; margin-top: 9px; background: var(--gold); box-shadow: 2px 2px 0 var(--ink); }
@@ -336,25 +338,27 @@ li.todo::before { display: none; }
 .soc .circ { width: 76px; height: 76px; border-radius: 50%; background: var(--ink); color: #fff; display: grid; place-items: center; box-shadow: 3px 5px 0 var(--gold); transition: transform .12s steps(2), color .12s; }
 .soc:hover .circ, .soc:focus-visible .circ { transform: translateY(-5px); color: var(--gold); }
 .soc svg { width: 30px; height: 30px; }
-.soc-hero { position: relative; width: 60px; height: 96px; }
-.soc-hero img { width: 60px; height: 96px; display: block; animation: bob 1.1s steps(2) infinite; }
+.soc-hero { position: relative; width: 78px; height: 96px; }
+.soc-hero img { width: 78px; height: 96px; display: block; animation: bob 1.1s steps(2) infinite; }
 .email-line { font-family: var(--read); font-size: 18px; }
-.closing { font-family: var(--display); font-size: clamp(11px, 1.8vw, 14px); line-height: 1.8; color: var(--gold-deep); margin: 6px 0 0; }
 
-/* Achievement toast */
+/* Achievement toast: top-right corner, clear of the cards and their buttons */
 #toast {
-  position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); z-index: 45;
-  transform: translateX(-50%); width: min(420px, calc(100% - 32px));
-  background: var(--ink); color: #fff; padding: 14px 16px; display: grid; gap: 8px;
+  position: fixed; right: 12px; top: calc(env(safe-area-inset-top, 0px) + 12px); z-index: 57;
+  width: min(340px, calc(100% - 170px));
+  background: var(--ink); color: #fff; padding: 12px 14px; display: grid; gap: 8px;
   box-shadow: 0 -4px 0 var(--gold), 0 4px 0 var(--gold), -4px 0 0 var(--gold), 4px 0 0 var(--gold);
-  animation: toastIn .3s steps(3);
+  animation: toastIn .4s cubic-bezier(.3,1.4,.5,1);
 }
-#toast .t { font-family: var(--display); font-size: 9px; letter-spacing: .12em; color: var(--gold); }
-#toast p { margin: 0; font-size: 16px; }
-#toast .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+#toast.out { animation: toastOut .35s ease-in forwards; }
+#toast .t { font-family: var(--display); font-size: 9px; letter-spacing: .12em; color: var(--gold); line-height: 1.6; }
+#toast p { margin: 0; font-size: 15px; }
+#toast .row { display: flex; gap: 6px 12px; align-items: center; flex-wrap: wrap; font-size: 15px; }
 #toast a { color: var(--gold); }
-#toast button { border: 0; background: none; color: #a9a59c; font-family: var(--display); font-size: 8px; margin-left: auto; }
-@keyframes toastIn { from { transform: translate(-50%, 30px); opacity: 0; } }
+#toast a { min-height: 44px; display: inline-flex; align-items: center; }
+#toast button { min-height: 44px; min-width: 44px; border: 0; background: none; color: #a9a59c; font-family: var(--display); font-size: 8px; margin-left: auto; }
+@keyframes toastIn { from { transform: translateX(40px); opacity: 0; } }
+@keyframes toastOut { to { transform: translateX(40px); opacity: 0; } }
 
 @media (max-width: 900px) {
   .room { grid-template-columns: 1fr; align-items: start; gap: 18px; }
@@ -376,6 +380,8 @@ li.todo::before { display: none; }
   .detail { position: fixed; inset: 0; z-index: 55; width: auto; max-height: none;
     padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-shadow: none; }
 }
+@media (max-width: 1000px) { .clock { display: none; } }
+@media (max-width: 900px) { .m-rank { display: none; } }
 @media (max-width: 760px) {
   .clock, .m-rank, .m-drops { display: none; }
   .m-bar { width: 72px; }
@@ -383,16 +389,17 @@ li.todo::before { display: none; }
   .room-head .path { display: none; }
 }
 @media (max-width: 560px) {
-  .topbar .brand span { display: none; }
+  .topbar .brand { display: none; }
+  .topbar { justify-content: flex-end; }
   .folders { gap: 12px 8px; }
   .folder { width: 150px; }
   .folder svg { width: 104px; }
-  #hero { --hw: 60px; --hh: 96px; }
+  #hero { --hw: 78px; --hh: 96px; }
   .stack-ctl .px-btn { padding: 10px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .cover, .folder svg, #boot, #hero.jumping { transition: none; }
-  #hero .fig, .soc-hero img, .wavy span, #navList .pill, .detail, .drop, #ach { animation: none !important; }
+  #hero .fig, .soc-hero img, .wavy span, #navList .pill, .detail, .drop, #toast, .m-plus { animation: none !important; }
   .confetti { display: none; }
   .dust, .spark { display: none; }
 }
@@ -412,6 +419,7 @@ li.todo::before { display: none; }
     <p id="ldTitle">Player 1</p>
     <p id="ldMsg">Warming up the serum</p>
   </div>
+  <button class="px-btn ld-skip" id="ldSkip" type="button">Skip</button>
   <div class="ld-foot">KARTHIK OS · CREATIVE CV · BUILD MICA-26</div>
 </div>
 
@@ -431,7 +439,7 @@ li.todo::before { display: none; }
     <div class="hello">
       <p class="eyebrow">Creative CV · for L'Oréal</p>
       <h1>Choose a <em>file</em>, Player 2</h1>
-      <p class="lede">Walk Karthik over to a folder to step inside. Three rooms, one person.</p>
+      <p class="lede">Click a folder to open it, or walk Karthik over if you'd like to play. Three rooms, one person.</p>
     </div>
     <div class="folders" id="folders"></div>
     <p class="how" id="how"></p>
@@ -506,10 +514,16 @@ const PROFILE = {
   email: "imkarthi7@gmail.com",
   linkedin: "https://www.linkedin.com/in/karthik-jeyakumar/",
   resume: "assets/resume.pdf",
-  photo: "assets/karthik.jpg",
-  closing: "What if it all works out?",
+  photo: "assets/img/karthik-badge.webp",
 };
 
+/*
+ * Each card can use any of:
+ *   body:     paragraphs
+ *   sections: sub-sections, each { heading, text } (heading shows in the pixel font)
+ *   list:     short lines shown as a list
+ *   actions:  buttons, each { label, href } or { label, go: "contact" }
+ */
 const FOLDERS = [
   {
     id: "profile",
@@ -519,9 +533,9 @@ const FOLDERS = [
     emblem: "person",
     cards: [
       {
-        tag: "Player 1",
+        tag: "PLAYER 1",
         title: "Karthik",
-        image: { src: "assets/karthik.jpg", alt: "Portrait of Karthik", portrait: true },
+        image: { src: "assets/img/karthik.webp", alt: "Portrait of Karthik", portrait: true },
         stats: [
           ["Origin", "Thiruvananthapuram, Kerala"],
           ["Guild", "MICA, Ahmedabad"],
@@ -531,28 +545,37 @@ const FOLDERS = [
         body: ["Ask my batchmates about me and you'll probably hear about the bright shirts, the even brighter phone cases, and a laugh that reaches you before I do. I won't argue."],
       },
       {
-        tag: "Origin story",
+        tag: "ORIGIN STORY",
         title: "Choices, made",
         body: ["My parents always trusted me to make my own choices, so I made them: Electrical Engineering, leaving a stable job for an MBA, moving from Kerala to Ahmedabad, and chasing an off-campus FMCG sales internship because I wanted to work close to consumers."],
       },
       {
-        tag: "Level 2",
+        tag: "LEVEL 2",
         title: "MICA",
-        body: [
-          "MICA was the first time I left home. I knew very little Hindi and had no idea how I'd fit in. So I started talking.",
-          "From organising an Onam Sadhya for 400+ people to waking up at 5 a.m. for a Rajinikanth first-day-first-show, MICA let me be fully myself. Somewhere along the way, I found sales: people, problem-solving and the thrill of figuring things out.",
+        body: ["MICA was the first time I left home. I knew very little Hindi and had no idea how I'd fit in. So I started talking. From organising an Onam Sadhya for 400+ people to waking up at 5 a.m. for a Rajinikanth first-day-first-show, MICA let me be fully myself. Somewhere along the way, I found sales: people, problem-solving and the thrill of figuring things out."],
+      },
+      {
+        tag: "SIDE QUESTS",
+        title: "Passions",
+        sections: [
+          { heading: "CRICKET — I REMEMBER THE SCORE, NOT THE DATE", text: "I may not remember when a game happened, but I'll remember the score, strike rate and who scored what. Every IPL season, I used to make squad sheets for every team with their batting and bowling line-ups, using two colour pens." },
+          { heading: "BADMINTON — I PLAY THE PLAYER", text: "I started by playing my own game. Now, I watch how my opponent plays and adapt — if someone keeps smashing, I slow the rally down; if they rely on drops, I adjust my positioning and pace accordingly. Every game becomes a little experiment in figuring out what works." },
+          { heading: "MOVIES — A DIFFERENT WAY OF LOOKING", text: "Movies give me perspectives I might not otherwise encounter. Pariyerum Perumal made me think about how differently people can experience the same society." },
         ],
       },
       {
-        tag: "Side quests",
-        title: "Passions",
-        body: ["TODO: Your passions"],
+        tag: "HOUSE RULE",
+        title: "My motto",
+        image: { src: "assets/img/motto.webp", alt: "The \"What if it all works out?\" graffiti at MICA" },
+        body: ["There's a line of graffiti at MICA that stayed with me: \"What if it all works out?\" That's how I approach things. I make the choice and give it 100%. What I can't control, I don't worry about."],
       },
       {
-        tag: "House rule",
-        title: "My motto",
-        quote: "What if it all works out?",
-        body: ["There's a line of graffiti at MICA that stayed with me. That's how I approach things. I make the choice and give it 100%. What I can't control, I don't worry about."],
+        tag: "EASTER EGGS",
+        title: "Fun facts",
+        list: [
+          "The sales executives I worked with in the field still send me reels.",
+          "Serial prankster. I'll plan a prank more carefully than most people plan a holiday.",
+        ],
       },
     ],
   },
@@ -560,30 +583,34 @@ const FOLDERS = [
     id: "beauty",
     name: "The Beauty Engine",
     eyebrow: "Folder 02 · Beauty & the brand I relate to",
-    intro: "The brand that earned my trust, and what beauty means to me.",
+    intro: "What beauty means to me, and the brand that earned my trust.",
     emblem: "lipstick",
     cards: [
       {
-        tag: "Brand I relate to",
+        tag: "PHILOSOPHY",
+        title: "What beauty means",
+        body: [
+          "I grew up being apprehensive about my skin tone, often wondering if people would see me differently because I was dark-skinned. But the people around me made me realise that they saw much more than that. They valued me for who I was — the energy I brought, the friendships I built and the way I showed up for them.",
+          "For me, that is beauty. What you carry within you eventually finds a way to show on the outside. As Elisabeth Kübler-Ross wrote, \"People are like stained-glass windows.\" Their true beauty comes through when there is light from within.",
+          "And I want to make people feel seen the way the people around me made me feel seen.",
+        ],
+      },
+      {
+        tag: "BRAND I RELATE TO",
         title: "L'Oréal Paris",
         logo: { src: "assets/brand/loreal-paris-logo.png", alt: "L'Oréal Paris" },
-        image: { src: "assets/gallery/loreal-products.webp", alt: "My own L'Oréal Paris products: Hyaluron Pure shampoo, Extraordinary Oil serum, Hyaluron Moisture conditioner" },
-        body: ["My entry into L'Oréal Paris was the Extraordinary Oil serum. A friend let me try it, and I liked it instantly: my hair felt smooth, never heavy."],
+        image: { src: "assets/img/loreal-products.webp", alt: "My own L'Oréal Paris products: Hyaluron Pure 72H Purifying Shampoo, Extraordinary Oil Serum, Hyaluron Moisture 72H Moisture Sealing Conditioner" },
+        body: ["My entry into L'Oréal Paris was through the Extraordinary Oil Serum. A friend recommended it, I tried it, and I loved how it made my hair smooth without weighing it down."],
       },
       {
-        tag: "Proof of claim",
-        title: "It simply delivered",
-        body: ["The quality was great, it did exactly what it promised, and it felt worth every rupee. That made me curious, and slowly one bottle became a shelf of them."],
-      },
-      {
-        tag: "Why it stuck",
+        tag: "WHY IT STUCK",
         title: "Trust, earned",
-        body: ["That's why I relate to it. It earned my trust by delivering, not by claiming, and that's how I'd like to earn yours."],
+        body: ["After that, I started trying more L'Oréal Paris products — the Hyaluron shampoo and conditioner, among others. I realised I was choosing the brand almost without thinking about it. Good experiences built trust, and when I tried something new, it met my expectations."],
       },
       {
-        tag: "Philosophy",
-        title: "What beauty means",
-        body: ["TODO: What beauty means to you"],
+        tag: "PROOF OF CLAIM",
+        title: "Deliver what you promise",
+        body: ["That is something I believe in too: deliver what you promise."],
       },
     ],
   },
@@ -591,29 +618,43 @@ const FOLDERS = [
     id: "stats",
     name: "Player Stats",
     eyebrow: "Folder 03 · Strengths & weaknesses",
-    intro: "What I bring, what I'm working on, and how to get the best out of me.",
+    intro: "What I bring, what I'm working on, and where I'm best used.",
     emblem: "chart",
     cards: [
       {
-        tag: "Key actives",
+        tag: "POWER-UPS",
         title: "Strengths",
-        list: ["TODO: Strength", "TODO: Strength", "TODO: Strength"],
+        sections: [
+          { heading: "INITIATIVE", text: "I like creating things that don't exist yet — including convincing college management to host our first campus-wide movie screening." },
+          { heading: "ADAPTABILITY", text: "Ahmedabad taught me Hindi. Tamil Nadu taught me to work around a language barrier. New places have never stopped me from finding my way." },
+          { heading: "ENERGY", text: "At Nestlé, I led and trained 12 interns across 6+ regions. I enjoyed keeping everyone connected, involved and moving together." },
+        ],
       },
       {
-        tag: "Warnings",
+        tag: "KNOWN BUGS",
         title: "Weaknesses",
-        list: ["TODO: Weakness, and what you do about it"],
+        sections: [
+          { heading: "MAY JUMP FIRST", text: "My instinct is to act quickly. I now make it a point to think through the consequences before committing." },
+          { heading: "MAY OVERLOAD", text: "I sometimes take on more than I need to, especially when I want to make sure everyone around me is doing fine. I've learnt that being able to handle more doesn't mean I should." },
+        ],
       },
       {
-        tag: "Directions for use",
-        title: "How to get the best out of me",
-        body: ["TODO: How to get the best out of you"],
+        tag: "BEST USED IN",
+        title: "General Trade & Modern Trade",
+        body: [
+          "I'd like to start where I can get closest to the Indian consumer — understanding how products move, how people buy and what actually happens beyond the plan.",
+          "I'm open to any category or market. Give me something challenging, let me get on the ground and figure it out.",
+          "Over time, I want to carry what I've learnt on the ground into marketing and use it to make better brand decisions.",
+        ],
       },
       {
-        tag: "Save file",
+        tag: "SAVE FILE",
         title: "Continue?",
-        body: ["The full résumé, and where to find me."],
-        contact: true,
+        body: ["Thanks for playing. The full résumé is one click away — and I'd love to continue this in person."],
+        actions: [
+          { label: "Get the CV (PDF)", href: "assets/resume.pdf" },
+          { label: "Contact me", go: "contact" },
+        ],
       },
     ],
   },
@@ -623,70 +664,95 @@ const FOLDERS = [
    Pixel art
    ===================================================================== */
 const PAL = {
-  H: "#15100c", h: "#3a2a1e", S: "#a4673f", s: "#83502f", E: "#0d0d0e", W: "#fbfaf7", M: "#6b3a22",
-  K: "#141416", k: "#2e2e34", L: "#34343b", G: "#c5a052", Y: "#c5a052",
-  P: "#1e1e22", O: "#070708", B: "#7a5230", b: "#5a3a20",
+  H: "#15100c", h: "#3a2a1e", S: "#a4673f", s: "#83502f", E: "#0d0d0e", M: "#6b3a22",
+  X: "#e3a72f", x: "#b8811b", c: "#b8811b", T: "#1e6e6a", O: "#141416",
+  B: "#e6c68a", b: "#c19a5b", g: "#4a2c17", k: "#141416", R: "#c8352e", q: "#d9d4ca",
 };
-// 20 x 32, facing right: dark hair, glasses, black suit, gold tie and pocket square, leather briefcase
-const TOP = [
-  "......HHHHHHH.......",
-  ".....HHHhhhHHH......",
-  "....HHHHHHHHHHH.....",
-  "....HHHHHHHHHHHH....",
-  "....HHHSSSSSSSSH....",
-  "....HHSSSSSSSSSS....",
-  "....HSSSEEEESEEEE...",
-  "...sSSSSEWWESEWWE...",
-  "...sSSSSSSSSSSSSS...",
-  "....SSSSSSSSSSSs....",
-  "....SSSSSSSMMMSs....",
-  ".....SSSSSSSSSs.....",
-  "......sSSSSSs.......",
-  "........SSSS........",
-  ".....KKKWWGWWKKK....",
-  "....KKKKKWGWKKKKK...",
-  "...KKkKKKLGLKKKYKK..",
-  "...KKkKKKKGKKKKKKK..",
-  "...KKkKKKKGKKKKkKK..",
-  "...KKkKKKKKKKKKkKK..",
-  "...SKkKKKKKKKKKkKS..",
-  "...S.KKKKKKKKKKK.S..",
-  ".....PPPPPPPPPP.bGb.",
+// All frames are 26 x 32. Bright mustard shirt, teal trousers, beard, cricket bat and badminton racket.
+const pad4 = (rows) => rows.map((r) => "...." + r + "..");
+// Side view, facing right
+const SIDE = pad4([
+  "......HHHHHHH.......", ".....HHHhhhHHH......", "....HHHHHHHHHHH.....", "....HHHHHHHHHHHH....",
+  "....HHHSSSSSSSSH....", "....HHSSSSSSSSSS....", "....HSSSSHHSSSHHS...", "...sSSSSSESSSSESS...",
+  "...sSSSSSSSSSSSSS...", "....HSSSSSSHHHHS....", "....HHSSSSHHMMHH....", ".....HHHHHHHHHHh....",
+  "......hHHHHHHh......", "........SSSS........",
+]).concat([
+  ".........XXXcSSScXXX......", "........XXXXXcScXXXXX.....", ".......XXXXXXXcXXXXXXX....", ".......XXXXXXXcXXXXXXX....",
+  ".......xxXXXXXcXXXXXxx....", "..........XXXXcXXXX.......", "..........XXXXcXXXX.......", "..........xxxxxxxxx.......",
+  "..........TTTTTTTTT.......",
+]);
+const SIDE_STRIDE = pad4([
+  ".....TTTT..TTTT.....", "....TTTT....TTTT....", "....TTT......TTT....", "...TTT.......TTT....",
+  "...TTT........TTT...", "..TTT.........TTT...", "..TTT..........TTT..", ".OOOO..........OOOO.", "....................",
+]);
+const SIDE_PASS = pad4([
+  "......TTTTTTTT......", "......TTTTTTTT......", "......TTTT.TTT......", "......TTT..TTT......",
+  "......TTT..TTT......", "......TTT..TTT......", "......TTT..TTT......", ".....OOOO..OOOOO....", "....................",
+]);
+// Front view (walking down) and back view (walking up)
+const FRONT = [
+  ".........HHHHHHHH.........", "........HHHHhhHHHH........", ".......HHHHHHHHHHHH.......", ".......HHHHHHHHHHHH.......",
+  ".......HHSSSSSSSSHH.......", ".......HSSSSSSSSSSH.......", "......sHSHHSSSSHHSHs......", "......sSSSESSSSESSSs......",
+  ".......SSSSSSsSSSSS.......", ".......HSSSHHHHSSSH.......", ".......HHSSHMMHSSHH.......", ".......HHHHHHHHHHHH.......",
+  "........hHHHHHHHHh........", "..........sHHHHs..........",
+  ".......XXXXcSScXXXX.......", "......XXXXXXccXXXXXX......", ".....XXXXXXXccXXXXXXX.....", ".....XXXXXXXccXXXXXXX.....",
+  ".....xxXXXXXccXXXXXxx.....", "........XXXXccXXXX........", "........XXXXccXXXX........", "........xxxxxxxxxx........",
+  "........TTTTTTTTTT........",
 ];
-const LEGS_STRIDE = [
-  ".....PPPP..PPPP.BBB.",
-  "....PPPP....PPPPBBB.",
-  "....PPP......PPPBBB.",
-  "...PPP.......PPPbbb.",
-  "...PPP........PPP...",
-  "..PPP.........PPP...",
-  "..PPP..........PPP..",
-  ".OOOO..........OOOO.",
-  "....................",
+const BACK = [
+  ".........HHHHHHHH.........", "........HHHHhhHHHH........", ".......HHHHHHHHHHHH.......", ".......HHHHHHHHHHHH.......",
+  ".......HHHHHHHHHHHH.......", ".......HHHHHHHHHHHH.......", "......sHHHHHHHHHHHHs......", "......sHHHHHhhHHHHHs......",
+  ".......HHHHHHHHHHHH.......", ".......HHHHHHHHHHHH.......", ".......HHHHHHHHHHHH.......", "........hHHHHHHHHh........",
+  "..........sSSSSs..........", "..........sSSSSs..........",
+  ".......XXXXccccXXXX.......", "......XXXXXXXXXXXXXX......", ".....XXXXXXXXXXXXXXXX.....", ".....XXXXXXXXXXXXXXXX.....",
+  ".....xxXXXXXXXXXXXXxx.....", "........XXXXXXXXXX........", "........XXXXXXXXXX........", "........xxxxxxxxxx........",
+  "........TTTTTTTTTT........",
 ];
-const LEGS_PASS = [
-  "......PPPPPPPP..BBB.",
-  "......PPPPPPPP..BBB.",
-  "......PPPP.PPP..BBB.",
-  "......PPP..PPP..bbb.",
-  "......PPP..PPP......",
-  "......PPP..PPP......",
-  "......PPP..PPP......",
-  ".....OOOO..OOOOO....",
-  "....................",
-];
-function sprite(rows, scale) {
-  const c = document.createElement("canvas");
-  c.width = rows[0].length * scale; c.height = rows.length * scale;
-  const g = c.getContext("2d");
-  rows.forEach((row, y) => [...row].forEach((ch, x) => {
-    if (PAL[ch]) { g.fillStyle = PAL[ch]; g.fillRect(x * scale, y * scale, scale, scale); }
-  }));
-  return c.toDataURL();
+const FB_LEG = "........TTTT..TTTT........";
+const FB_STAND = ["........TTTTTTTTTT........", FB_LEG, FB_LEG, FB_LEG, FB_LEG, FB_LEG, FB_LEG, ".......OOOOO..OOOOO.......", ".........................."];
+const FB_STEP_L = ["........TTTTTTTTTT........", FB_LEG, FB_LEG, FB_LEG, FB_LEG, FB_LEG, ".......OOOOO..TTTT........", "..............OOOOO.......", ".........................."];
+const FB_STEP_R = ["........TTTTTTTTTT........", FB_LEG, FB_LEG, FB_LEG, FB_LEG, FB_LEG, "........TTTT..OOOOO.......", ".......OOOOO..............", ".........................."];
+// Props as [x, y, colour]; they move with the hand that holds them
+const col = (x, ys, k) => ys.map((y) => [x, y, k]);
+const BAT_SIDE = [...col(21, [22, 23, 24], "g"), ...col(21, [25, 26, 27, 28, 29, 30], "B"), ...col(22, [25, 26, 27, 28, 29, 30], "b"), [21, 31, "b"]];
+const RACKET_SIDE = [[6, 22, "k"], [5, 23, "k"], [4, 24, "k"], [2, 25, "R"], [3, 25, "R"], [4, 25, "R"],
+  ...col(1, [26, 27, 28, 29], "R"), ...col(5, [26, 27, 28, 29], "R"), [3, 27, "q"], [3, 28, "q"], [2, 30, "R"], [3, 30, "R"], [4, 30, "R"]];
+const BAT_FRONT = [...col(5, [22, 23, 24], "g"), ...col(5, [25, 26, 27, 28, 29, 30], "B"), ...col(4, [25, 26, 27, 28, 29, 30], "b"), [5, 31, "b"]];
+const RACKET_FRONT = [[20, 22, "k"], [21, 23, "k"], [21, 24, "k"], [21, 25, "R"], [22, 25, "R"], [23, 25, "R"],
+  ...col(20, [26, 27, 28, 29], "R"), ...col(24, [26, 27, 28, 29], "R"), [22, 27, "q"], [22, 28, "q"], [21, 30, "R"], [22, 30, "R"], [23, 30, "R"]];
+const mirror = (pts) => pts.map(([x, y, k]) => [25 - x, y, k]);
+// An arm is two skin columns under the sleeve (rows 19-21) plus the prop in that hand.
+// dx swings it forward/back (side view); dy -1 lifts the hand a pixel (front/back views).
+const arm = (cols, prop, dx = 0, dy = 0) => ({ cols, prop, dx, dy });
+function compose(rows, behind, inFront, scale) {
+  const cv = document.createElement("canvas");
+  cv.width = 26 * scale; cv.height = 32 * scale;
+  const g = cv.getContext("2d");
+  const px = (x, y, k) => { if (PAL[k] && x >= 0 && x < 26 && y >= 0 && y < 32) { g.fillStyle = PAL[k]; g.fillRect(x * scale, y * scale, scale, scale); } };
+  const drawArm = (a) => {
+    for (let y = 19; y <= 21 + a.dy; y++) a.cols.forEach((x) => px(x + a.dx, y, "S"));
+    a.prop.forEach(([x, y, k]) => px(x + a.dx, y + a.dy, k));
+  };
+  behind.forEach(drawArm);
+  rows.forEach((row, y) => [...row].forEach((ch, x) => px(x, y, ch)));
+  inFront.forEach(drawArm);
+  return cv.toDataURL();
 }
-const STAND = sprite(TOP.concat(LEGS_PASS), 4);
-const WALK = [sprite(TOP.concat(LEGS_STRIDE), 4), STAND];
-const BIG = [sprite(TOP.concat(LEGS_STRIDE), 5), sprite(TOP.concat(LEGS_PASS), 5)];
+// Each view is a 4-frame walk: [step, stand, other step, stand]. Frame 1 is the idle pose.
+function makeFrames(scale) {
+  const side = (legs, racketDx, batDx) => compose(SIDE.concat(legs), [arm([7, 8], RACKET_SIDE, racketDx)], [arm([20, 21], BAT_SIDE, batDx)], scale);
+  const front = (legs, batDy, racketDy) => compose(FRONT.concat(legs), [], [arm([5, 6], BAT_FRONT, 0, batDy), arm([19, 20], RACKET_FRONT, 0, racketDy)], scale);
+  const back = (legs, batDy, racketDy) => compose(BACK.concat(legs), [], [arm([19, 20], mirror(BAT_FRONT), 0, batDy), arm([5, 6], mirror(RACKET_FRONT), 0, racketDy)], scale);
+  const sideStand = side(SIDE_PASS, 0, 0), frontStand = front(FB_STAND, 0, 0), backStand = back(FB_STAND, 0, 0);
+  return {
+    side: [side(SIDE_STRIDE, -1, 1), sideStand, side(SIDE_STRIDE, 1, -1), sideStand],
+    front: [front(FB_STEP_L, 0, -1), frontStand, front(FB_STEP_R, -1, 0), frontStand],
+    back: [back(FB_STEP_R, 0, -1), backStand, back(FB_STEP_L, -1, 0), backStand],
+  };
+}
+const F2 = makeFrames(2), F3 = makeFrames(3), F4 = makeFrames(4), F5 = makeFrames(5);
+// The desk character is drawn 3x on phones, 4x elsewhere
+const heroFrames = () => (innerWidth <= 560 ? F3 : F4);
 
 const EMBLEMS = {
   person: ["..GGGG..", "..GGGG..", "..GGGG..", "...GG...", ".GGGGGG.", "GGGGGGGG", "GGGGGGGG", "GGGGGGGG"],
@@ -726,7 +792,9 @@ function iconSVG(name) {
 const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => [...document.querySelectorAll(sel)];
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-const TOUCH = matchMedia("(hover: none)").matches;
+const TOUCH = matchMedia("(hover: none), (pointer: coarse)").matches;
+// Phones and small screens: folders open on tap, and Karthik stays in his own strip below the folders
+const SMALL = () => TOUCH || innerWidth <= 560 || innerHeight <= 500;
 function el(tag, cls, text) {
   const n = document.createElement(tag);
   if (cls) n.className = cls;
@@ -785,7 +853,6 @@ function contactLine(withResume) {
    ===================================================================== */
 let opened = new Set();
 try { opened = new Set(JSON.parse(localStorage.getItem("karthikos-opened") || "[]")); } catch {}
-let achievementDue = false;
 // Each folder opened moves the meter a third of the way; the rank reads like a shopping trip
 const RANKS = ["Just browsing", "Added to cart", "At checkout", "Sold! Let's talk"];
 const pctDone = () => Math.round((opened.size / FOLDERS.length) * 100);
@@ -811,27 +878,19 @@ function updateQuest() {
 }
 function markOpened(i) {
   if (opened.has(i)) return false;
-  const before = meterShown;
   opened.add(i);
   try { localStorage.setItem("karthikos-opened", JSON.stringify([...opened])); } catch {}
-  if (opened.size === FOLDERS.length) achievementDue = true;
-  meterShown = before;
-  setTimeout(() => popAchievement(i, before), 450);
+  setTimeout(() => {
+    updateQuest();
+    sfx("ach");
+    if (!reduceMotion) $$(".m-pct").forEach((pc) => {
+      if (!pc.offsetParent) return;
+      const plus = el("span", "m-plus", `+${Math.round(100 / FOLDERS.length)}%`);
+      pc.parentElement.append(plus);
+      setTimeout(() => plus.remove(), 1700);
+    });
+  }, 450);
   return true;
-}
-function popAchievement(i, before) {
-  $("#ach")?.remove();
-  const p = pctDone(), done = p === 100;
-  const a = el("div"); a.id = "ach"; a.setAttribute("role", "status");
-  a.innerHTML = `<span class="t"><span>${done ? "Profile complete" : "Achievement unlocked"}</span><span>+${Math.round(100 / FOLDERS.length)}%</span></span>
-    <p><b>${FOLDERS[i].name}</b> opened. ${done ? "You've seen every folder." : `${FOLDERS.length - opened.size} to go.`}</p>`;
-  const q = el("div", "quest"); q.innerHTML = meterHTML(p); a.append(q);
-  document.body.append(a);
-  meterShown = before;
-  updateQuest();
-  sfx(done ? "fanfare" : "ach");
-  if (done) confetti();
-  setTimeout(() => { a.classList.add("out"); setTimeout(() => a.remove(), 400); }, done ? 4200 : 3000);
 }
 function confetti() {
   if (reduceMotion) return;
@@ -882,9 +941,9 @@ document.addEventListener("click", (e) => { if (e.target.closest("[data-back]"))
 
 /* ----- golden drops: three collectibles hidden on the desk, each hides a fun fact ----- */
 const DROPS = [
-  { fact: "I was manufactured in Thiruvananthapuram, Kerala." },
-  { fact: "At MICA I organised an Onam Sadhya for 400+ people." },
-  { fact: "I've woken up at 5 a.m. for a Rajinikanth first-day-first-show. Worth it." },
+  { fact: "Shipped my Royal Enfield from Kerala to Ahmedabad within my first few months at MICA." },
+  { fact: "Backbencher through most of school. Front row the moment a sales lecture began." },
+  { fact: "Speaks Malayalam, Hindi, English and Hinglish." },
 ];
 let dropsGot = new Set();
 try { dropsGot = new Set(JSON.parse(localStorage.getItem("karthikos-drops") || "[]")); } catch {}
@@ -892,7 +951,9 @@ function placeDrops() {
   $$(".drop").forEach((d) => d.remove());
   const W = desk.clientWidth, ps = $(".play-space"), f = $("#folders");
   const psY = ps.offsetTop + ps.offsetHeight * 0.55;
-  const spots = [[W * 0.12, psY], [W * 0.88, psY], W >= 900 ? [W * 0.1, f.offsetTop + f.offsetHeight * 0.55] : [W * 0.5, ps.offsetTop + 14]];
+  const spots = SMALL()
+    ? [[W * 0.1, ps.offsetTop + ps.offsetHeight - 16], [W * 0.9, ps.offsetTop + ps.offsetHeight - 16], [W * 0.32, ps.offsetTop + ps.offsetHeight - 16]]
+    : [[W * 0.12, psY], [W * 0.88, psY], W >= 900 ? [W * 0.1, f.offsetTop + f.offsetHeight * 0.55] : [W * 0.5, ps.offsetTop + 14]];
   DROPS.forEach((d, i) => {
     [d.x, d.y] = spots[i];
     if (dropsGot.has(i)) return;
@@ -911,14 +972,14 @@ function checkDrops() {
     burst(d.x, d.y - 20, 12); sfx("coin");
     meterShown = pctDone(); updateQuest();
     const all = dropsGot.size === DROPS.length;
-    say(`<b>Golden drop ${dropsGot.size}/${DROPS.length}</b><br>${d.fact}${all ? "<br><b>All drops found!</b> You're thorough. I like that." : ""}`, 6000);
+    say(`<b>Golden drop ${dropsGot.size}/${DROPS.length}</b><br>${d.fact}${all ? "<br><b>All drops found!</b> Thanks for exploring." : ""}`, 6000);
     H.lastInput = performance.now() + 2000;
   });
 }
 function showAchievement() {
   $("#toast")?.remove();
   const t = el("div"); t.id = "toast"; t.setAttribute("role", "status");
-  t.innerHTML = `<span class="t">Achievement unlocked</span><p>You opened every file. Next level: a conversation.</p>`;
+  t.innerHTML = `<span class="t">Achievement unlocked</span><p>You've opened every card in every folder.</p>`;
   const row = el("div", "row");
   const c = el("a", null, "Contact me"); c.href = "#contact";
   c.addEventListener("click", (e) => { e.preventDefault(); t.remove(); navigate("contact"); });
@@ -927,8 +988,9 @@ function showAchievement() {
   row.append(c, cv, x);
   t.append(row);
   document.body.append(t);
-  burst(H.x, H.y - 70, 16);
-  say("That's everything! <b>Let's talk?</b>", 6000);
+  sfx("fanfare");
+  confetti();
+  setTimeout(() => { t.classList.add("out"); setTimeout(() => t.remove(), 400); }, 6000);
 }
 
 /* =====================================================================
@@ -946,21 +1008,30 @@ function loader({ title, msg, lines, ms }, done) {
   const dur = reduceMotion ? Math.min(ms, 350) : ms;
   const cells = $("#bar").children;
   const t0 = performance.now();
+  // Finishes on time even if the browser stalls animation frames, and Skip ends it at once
+  let finished = false, skip = false;
+  const finish = () => {
+    if (finished) return;
+    finished = true;
+    clearTimeout(safety);
+    done();
+    bootEl.classList.add("done");
+    $("#nav").hidden = false;
+    busy = false;
+    setTimeout(() => { if (bootEl.classList.contains("done")) bootEl.hidden = true; }, 320);
+  };
+  const safety = setTimeout(finish, dur + 250);
+  $("#ldSkip").onclick = () => { skip = true; finish(); };
   function tick(now) {
-    const p = Math.min(1, (now - t0) / dur);
+    if (finished) return;
+    const p = skip ? 1 : Math.min(1, (now - t0) / dur);
     const on = Math.round(p * 20);
     for (let i = 0; i < 20; i++) cells[i].classList.toggle("on", i < on);
     $("#pct").textContent = Math.round(p * 100) + "%";
     if (lines) $("#ldMsg").textContent = lines[Math.min(lines.length - 1, Math.floor(p * lines.length * 0.999))];
-    walker.src = reduceMotion ? BIG[1] : BIG[Math.floor(now / 170) % 2];
+    walker.src = reduceMotion ? F5.side[1] : F5.side[Math.floor(now / 150) % 4];
     if (p < 1) return requestAnimationFrame(tick);
-    setTimeout(() => {
-      done();
-      bootEl.classList.add("done");
-      $("#nav").hidden = false;
-      busy = false;
-      setTimeout(() => { if (bootEl.classList.contains("done")) bootEl.hidden = true; }, 320);
-    }, 180);
+    setTimeout(finish, 120);
   }
   requestAnimationFrame(tick);
 }
@@ -981,7 +1052,7 @@ function navigate(dest) {
   loader({
     title,
     msg: dest === "home" ? "Back to the desk" : dest === "contact" ? "Finding my number" : `Entering folder ${pad(fi + 1)}`,
-    ms: dest === "home" ? 800 : 1200,
+    ms: dest === "home" ? 600 : 900,
   }, () => showView(dest, from));
 }
 function showView(dest, from = -1) {
@@ -991,7 +1062,8 @@ function showView(dest, from = -1) {
   const fi = FOLDERS.findIndex((f) => f.id === dest);
   view = fi >= 0 ? "folder" : dest;
   if (fi >= 0) { renderSection(fi); markOpened(fi); sfx("open"); }
-  if (dest === "contact") sfx("open");
+  if (dest === "contact") { sfx("open"); $$("#contact img[data-src]").forEach((im) => { im.src = im.dataset.src; im.removeAttribute("data-src"); }); }
+  setTimeout(() => typeof flushAchievement === "function" && flushAchievement(), 600);
   if (dest === "home") { H.running ? returnHero(from) : startHero(); }
   try { history.replaceState(null, "", dest === "home" ? location.pathname : "#" + dest); } catch {}
   scrollTo(0, 0);
@@ -1028,12 +1100,12 @@ function buildDesktop() {
     b.type = "button";
     b.innerHTML = folderSVG(f.emblem);
     b.append(el("span", "fname", f.name), el("span", "fmeta", `${f.cards.length} cards`));
-    b.setAttribute("aria-label", `Open ${f.name}, ${f.cards.length} cards`);
+    b.setAttribute("aria-label", `${f.name}, ${f.cards.length} cards`);
     b.addEventListener("click", () => approach(i));
     holder.append(b);
   });
   $("#how").innerHTML = TOUCH
-    ? "<span>Drag or tap to walk</span><span>Tap a folder to enter</span><span>Find 3 golden drops</span>"
+    ? "<span>Tap a folder to open it</span>"
     : "<span>Move <kbd>Mouse</kbd> or <kbd>Arrows</kbd> <kbd>WASD</kbd></span><span>Enter <kbd>Click</kbd> or <kbd>Enter</kbd></span><span>Find 3 golden drops</span>";
   $("#deskContact").replaceWith(contactLine(true));
   const clock = $("#clock");
@@ -1044,13 +1116,12 @@ function buildDesktop() {
 
 /* ----- the walking character ----- */
 const desk = $("#desk"), hero = $("#hero"), heroImg = $("#heroImg"), bubble = $("#say");
-const H = { x: 0, y: 0, tx: null, ty: null, stopAt: 4, keys: new Set(), dash: null, left: false,
+const H = { view: "front", x: 0, y: 0, tx: null, ty: null, stopAt: 4, keys: new Set(), dash: null, left: false,
   frame: 0, lastFrame: 0, lastDust: 0, lastInput: 0, near: -1, idleLine: 0, running: false, busy: false, t: 0 };
 const IDLE_LINES = [
   "Every folder you open fills the meter up top.",
   "Yes, the shirts really are that bright.",
   "Tip: the arrow keys and WASD work too.",
-  "What if it all works out?",
   "Not sure where to start? Try <b>Player Profile</b>.",
   "Psst. There are <b>golden drops</b> hidden on this desk.",
 ];
@@ -1059,13 +1130,19 @@ function say(html, ms) {
   clearTimeout(sayTimer);
   bubble.innerHTML = html;
   bubble.hidden = false;
+  if (!$("#desktop").hidden) renderHero();
   if (ms) sayTimer = setTimeout(() => { if (H.near < 0) bubble.hidden = true; }, ms);
 }
 const heroW = () => hero.querySelector(".fig").offsetWidth || 80;
 const heroH = () => hero.querySelector(".fig").offsetHeight || 128;
 function bounds() {
-  const w = heroW();
-  return { minX: w / 2 + 4, maxX: desk.clientWidth - w / 2 - 4, minY: heroH() + 10, maxY: desk.clientHeight - 8 };
+  const w = heroW(), minX = w / 2 + 4, maxX = desk.clientWidth - w / 2 - 4;
+  if (SMALL()) {
+    // Room above him is kept for his speech bubble, so neither covers the folders
+    const ps = $(".play-space");
+    return { minX, maxX, minY: ps.offsetTop + heroH() + 120, maxY: ps.offsetTop + ps.offsetHeight - 8 };
+  }
+  return { minX, maxX, minY: heroH() + 10, maxY: desk.clientHeight - 8 };
 }
 function clampHero() {
   const b = bounds();
@@ -1082,8 +1159,25 @@ function folderGeom(i) {
 }
 function renderHero() {
   hero.style.transform = `translate(${Math.round(H.x - heroW() / 2)}px, ${Math.round(H.y - heroH())}px)`;
-  hero.classList.toggle("left", H.left);
-  hero.classList.toggle("edge-r", H.x > desk.clientWidth - 200);
+  hero.classList.toggle("left", H.left && H.view === "side");
+  // Keep the speech bubble inside the desk, with its tail pointing at him
+  if (!bubble.hidden) {
+    const bw = bubble.offsetWidth, bh = bubble.offsetHeight, hw = heroW(), heroLeft = H.x - hw / 2, heroTop = H.y - heroH();
+    const abs = Math.max(8, Math.min(desk.clientWidth - bw - 8, H.x - 24));
+    // Above his head by default; beside him if that would cover a folder
+    const dr = desk.getBoundingClientRect();
+    const folders = [...$("#folders").children].map((f) => { const r = f.getBoundingClientRect(); return { l: r.left - dr.left, t: r.top - dr.top, r: r.right - dr.left, b: r.bottom - dr.top }; });
+    const hits = (l, t) => folders.some((f) => l < f.r && l + bw > f.l && t < f.b && t + bh > f.t);
+    let side = null;
+    if (hits(abs, heroTop - 14 - bh)) {
+      const right = heroLeft + hw + 10, left = heroLeft - bw - 10;
+      if (right + bw <= desk.clientWidth - 8 && !hits(right, heroTop + 6)) side = right;
+      else if (left >= 8 && !hits(left, heroTop + 6)) side = left;
+    }
+    bubble.classList.toggle("beside", side !== null);
+    bubble.style.left = Math.round((side ?? abs) - heroLeft) + "px";
+    bubble.style.setProperty("--tail", Math.round(Math.max(8, Math.min(bw - 20, H.x - abs - 4))) + "px");
+  }
 }
 function dust() {
   const d = el("div", "dust");
@@ -1145,12 +1239,14 @@ function step(now) {
       // Pinned against the edge of the floor on the way to a folder: count it as arrived
       if (H.dash && Math.hypot(H.x - ox, H.y - oy) < 0.1) { const done = H.dash.done; H.dash = null; H.tx = null; done(); }
       if (dx < -0.2) H.left = true; else if (dx > 0.2) H.left = false;
-      if (now - H.lastFrame > (H.dash ? 90 : 130)) { H.frame ^= 1; H.lastFrame = now; heroImg.src = WALK[H.frame]; }
+      const view = Math.abs(dy) > Math.abs(dx) * 1.2 ? (dy > 0 ? "front" : "back") : "side";
+      if (view !== H.view) { H.view = view; H.lastFrame = 0; }
+      if (now - H.lastFrame > (H.dash ? 80 : 120)) { H.frame = (H.frame + 1) % 4; H.lastFrame = now; heroImg.src = heroFrames()[H.view][H.frame]; }
       if (!reduceMotion && now - H.lastDust > 120) { H.lastDust = now; dust(); }
       hero.classList.remove("idle");
       H.lastInput = now;
     } else if (!hero.classList.contains("idle")) {
-      heroImg.src = STAND; hero.classList.add("idle");
+      heroImg.src = heroFrames()[H.view][1]; hero.classList.add("idle");
     }
     let near = -1;
     for (let i = 0; i < FOLDERS.length; i++) {
@@ -1169,14 +1265,15 @@ function step(now) {
 }
 
 function startHero() {
-  heroImg.src = STAND;
+  H.view = "front";
+  heroImg.src = heroFrames().front[1];
   placeDrops();
   const ps = $(".play-space");
-  H.x = desk.clientWidth / 2;
+  H.x = desk.clientWidth * (SMALL() ? 0.62 : 0.5);
   H.y = ps.offsetTop + ps.offsetHeight - 16;
   clampHero(); renderHero();
-  say(TOUCH ? "Hi, I'm Karthik! Drag your finger and I'll follow."
-            : "Hi, I'm Karthik! Move your mouse and I'll follow. Walk me to a folder.", 6000);
+  say(TOUCH ? "Hi, I'm Karthik! Tap a folder to open it."
+            : "Hi, I'm Karthik! Click a folder to open it, or move your mouse and I'll follow.", 6000);
   H.lastInput = performance.now();
   if (!H.running) { H.running = true; requestAnimationFrame(step); }
 }
@@ -1185,22 +1282,22 @@ function returnHero(from) {
   sfx("back");
   requestAnimationFrame(placeDrops);
   hero.classList.remove("jumping"); hero.classList.add("idle");
-  heroImg.src = STAND;
+  H.view = "front";
+  heroImg.src = heroFrames().front[1];
   requestAnimationFrame(() => {
     if (from >= 0) { const g = folderGeom(from); H.x = g.door.x; H.y = g.door.y + heroH() * 0.7; }
     else { const ps = $(".play-space"); H.x = desk.clientWidth / 2; H.y = ps.offsetTop + ps.offsetHeight - 16; }
     clampHero(); renderHero();
     burst(H.x, H.y - heroH() / 2, 8);
-    if (achievementDue) { achievementDue = false; showAchievement(); return; }
     const left = FOLDERS.length - opened.size;
-    say(left ? `Good stuff, right? <b>${left} folder${left > 1 ? "s" : ""}</b> to go.` : "Back on the desk. Revisit anything, or <b>let's talk</b>.", 4500);
+    say(left ? `<b>${left} folder${left > 1 ? "s" : ""}</b> to go.` : "Back on the desk. Revisit anything, or <b>let's talk</b>.", 4500);
   });
 }
 
 // Walk to a folder, jump on it, then load the room
 function approach(i) {
   if (busy || H.busy) return;
-  if (reduceMotion || $("#desktop").hidden) return navigate(FOLDERS[i].id);
+  if (reduceMotion || SMALL() || $("#desktop").hidden) return navigate(FOLDERS[i].id);
   const g = folderGeom(i);
   H.keys.clear();
   const jumpOn = () => {
@@ -1209,7 +1306,8 @@ function approach(i) {
     const top = folderGeom(i).top;
     H.left = top.x < H.x;
     hero.classList.remove("idle"); hero.classList.add("jumping");
-    heroImg.src = STAND;
+    H.view = "back"; // turns to face the folder as he jumps in
+    heroImg.src = heroFrames().back[1];
     H.x = top.x; H.y = top.y; renderHero();
     setTimeout(() => {
       hero.classList.remove("jumping"); hero.classList.add("idle");
@@ -1243,28 +1341,44 @@ desk.addEventListener("pointerdown", (e) => {
 });
 addEventListener("pointerup", () => (dragging = false));
 addEventListener("pointercancel", () => (dragging = false));
-desk.addEventListener("touchmove", (e) => { if (dragging) e.preventDefault(); }, { passive: false });
-addEventListener("resize", () => { if (!$("#desktop").hidden) { clampHero(); renderHero(); placeDrops(); } });
+addEventListener("resize", () => { if (!$("#desktop").hidden) { heroImg.src = heroFrames()[H.view][1]; clampHero(); renderHero(); placeDrops(); } });
 
 /* =====================================================================
    Folder room: vertical card stack + opened card
    ===================================================================== */
 const S = { fi: 0, active: 0, detail: false, lastFront: -1 };
 const stack = $("#stack"), toc = $("#toc"), tocHero = $("#tocHero");
-const readMap = FOLDERS.map(() => new Set());
-const SMALL = [sprite(TOP.concat(LEGS_STRIDE), 2), sprite(TOP.concat(LEGS_PASS), 2)];
+let readMap = FOLDERS.map(() => new Set());
+try { const saved = JSON.parse(localStorage.getItem("karthikos-read") || "{}"); readMap = FOLDERS.map((f) => new Set(saved[f.id] || [])); } catch {}
+function markRead(fi, n) {
+  if (readMap[fi].has(n)) return;
+  readMap[fi].add(n);
+  const out = {}; FOLDERS.forEach((f, i) => (out[f.id] = [...readMap[i]]));
+  try { localStorage.setItem("karthikos-read", JSON.stringify(out)); } catch {}
+  const all = FOLDERS.every((f, i) => f.cards.every((_, k) => readMap[i].has(k)));
+  let shown = false;
+  try { shown = localStorage.getItem("karthikos-ach") === "1"; } catch {}
+  if (all && !shown) {
+    try { localStorage.setItem("karthikos-ach", "1"); } catch {}
+    achPending = true;
+    setTimeout(flushAchievement, 700);
+  }
+}
+// On tablets and phones an open card fills the screen, so the toast waits until it's closed
+let achPending = false;
+function flushAchievement() {
+  if (!achPending || (S.detail && narrowLayout())) return;
+  achPending = false;
+  showAchievement();
+}
 const EASE = "cubic-bezier(.2,.8,.2,1)";
 const anim = (node, frames, opts) => (reduceMotion || !node.animate ? null : node.animate(frames, { easing: EASE, fill: "backwards", ...opts }));
-const hasDraft = (card) => [...(card.body || []), ...(card.list || [])].some(isTodo);
+const hasDraft = (card) => [...(card.body || []), ...(card.list || []), ...(card.sections || []).map((x) => x.text)].some(isTodo);
 
 function coverEl(card, n, total) {
   const b = el("button", "cover");
   b.type = "button";
-  if (card.image) {
-    b.classList.add("img");
-    const im = el("img"); im.src = card.image.src; im.alt = ""; im.draggable = false; im.loading = "lazy";
-    b.append(im, el("div", "c-shade"));
-  } else b.classList.add("gen");
+  b.classList.add("gen");
   b.append(el("span", "c-tag", card.tag), el("span", "c-title", card.title), el("span", "c-num", pad(n + 1)));
   b.append(el("span", "c-open", TOUCH ? "Tap to open" : "Click to open"));
   if (hasDraft(card)) b.append(el("span", "c-todo", "Draft"));
@@ -1298,7 +1412,7 @@ function renderSection(fi) {
     b.addEventListener("click", () => { if (n === S.active && !S.detail) openDetail(); else goCard(n); });
     li.append(b); toc.append(li);
   });
-  tocHero.src = SMALL[1];
+  tocHero.src = F2.front[1];
   $("#stackHint").textContent = TOUCH
     ? "Swipe the stack or tap a card in the list. Tap the front card to open it."
     : "Scroll anywhere, use the arrow keys, or pick from the list. Click the front card to open it.";
@@ -1379,7 +1493,9 @@ function updateToc() {
   if (reduceMotion || from === y) return;
   clearInterval(tocWalk);
   let k = 0;
-  tocWalk = setInterval(() => { tocHero.src = SMALL[k++ % 2]; if (k > 5) { clearInterval(tocWalk); tocHero.src = SMALL[1]; } }, 70);
+  // Walks down the list facing you, up the list facing away
+  const frames = y > from ? F2.front : F2.back;
+  tocWalk = setInterval(() => { tocHero.src = frames[k++ % 4]; if (k > 6) { clearInterval(tocWalk); tocHero.src = F2.front[1]; } }, 60);
 }
 const narrowLayout = () => innerWidth < 900;
 
@@ -1436,7 +1552,11 @@ function renderDetail(dir = 0) {
   const h = el("h3", null, card.title); h.id = "detailTitle";
   if (card.logo) { const l = el("img", "logo"); l.src = card.logo.src; l.alt = card.logo.alt; body.append(l); h.style.cssText = "position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)"; }
   body.append(h);
-  if (card.image) { const im = el("img", "media" + (card.image.portrait ? " portrait" : "")); im.src = card.image.src; im.alt = card.image.alt; body.append(im); }
+  if (card.image) {
+    const im = el("img", "media" + (card.image.portrait ? " portrait" : ""));
+    im.alt = card.image.alt; im.decoding = "async"; im.src = card.image.src;
+    body.append(im);
+  }
   if (card.quote) body.append(el("p", "big-quote", `"${card.quote}"`));
   if (card.stats) {
     const dl = el("dl", "stats");
@@ -1444,14 +1564,28 @@ function renderDetail(dir = 0) {
     body.append(dl);
   }
   (card.body || []).forEach((t) => body.append(el("p", isTodo(t) ? "todo" : null, t)));
+  (card.sections || []).forEach((sec) => {
+    const d = el("div", "subsec");
+    d.append(el("h4", null, sec.heading), el("p", isTodo(sec.text) ? "todo" : null, sec.text));
+    body.append(d);
+  });
   if (card.list) { const ul = el("ul"); card.list.forEach((t) => ul.append(el("li", isTodo(t) ? "todo" : null, t))); body.append(ul); }
-  if (card.contact) body.append(contactLine(true));
+  if (card.actions) {
+    const row = el("div", "actions");
+    card.actions.forEach((a, k) => {
+      const b = el("a", "px-btn" + (k === 0 ? " dark" : ""), a.label);
+      if (a.go) { b.href = "#" + a.go; b.addEventListener("click", (e) => { e.preventDefault(); navigate(a.go); }); }
+      else { b.href = a.href; b.target = "_blank"; b.rel = "noopener"; }
+      row.append(b);
+    });
+    body.append(row);
+  }
   body.scrollTop = 0;
   $("#dCount").textContent = `${S.active + 1}/${total}`;
   $("#dPrev").disabled = S.active === 0;
   $("#dNext").disabled = S.active === total - 1;
   $("#dNextTitle").textContent = S.active < total - 1 ? f.cards[S.active + 1].title : "";
-  readMap[S.fi].add(S.active);
+  markRead(S.fi, S.active);
   updateToc();
   // Content slides in from the side you're heading to, one piece after another
   [...body.children].forEach((node, i) => anim(node, [
@@ -1483,6 +1617,7 @@ function closeDetail(silent) {
   $("#detail").hidden = true;
   $("#stackWrap").hidden = false;
   if (silent || !wasOpen) return;
+  setTimeout(flushAchievement, 500);
   stackLayout();
   const front = stack.querySelector(".cover.front");
   front?.focus({ preventScroll: true });
@@ -1507,7 +1642,7 @@ addEventListener("resize", () => { if (view === "folder") { tocHero._y = null; s
 function buildContact() {
   const c = $("#contactInner");
   const handle = el("div", "handle");
-  const im = el("img"); im.src = PROFILE.photo; im.alt = "";
+  const im = el("img"); im.dataset.src = PROFILE.photo; im.alt = ""; im.width = 40; im.height = 40;
   handle.append(im, document.createTextNode(PROFILE.handle));
   const socials = el("div", "socials");
   const soc = (href, icon, label, blank) => {
@@ -1517,12 +1652,12 @@ function buildContact() {
     a.append(circ, el("span", null, label));
     return a;
   };
-  const guy = el("div", "soc-hero"); const gi = el("img", "pixel"); gi.src = STAND; gi.alt = ""; guy.append(gi); guy.setAttribute("aria-hidden", "true");
+  const guy = el("div", "soc-hero"); const gi = el("img", "pixel"); gi.src = F3.front[1]; gi.alt = ""; guy.append(gi); guy.setAttribute("aria-hidden", "true");
   socials.append(guy, soc(PROFILE.linkedin, "linkedin", "LinkedIn", true), soc("mailto:" + PROFILE.email, "mail", "Email"), soc(PROFILE.resume, "cv", "CV (PDF)", true));
   const mail = el("div", "email-line");
   const addr = el("span", null, PROFILE.email);
   mail.append(addr, copyButton(addr));
-  c.append(handle, wavy("LET'S TALK"), socials, mail, el("p", "closing", `"${PROFILE.closing}"`));
+  c.append(handle, wavy("LET'S TALK"), socials, mail);
 }
 
 /* =====================================================================
@@ -1580,7 +1715,7 @@ const startAt = DESTS.includes(location.hash.slice(1)) ? location.hash.slice(1) 
 loader({
   title: "Player 1",
   lines: ["Warming up the serum", "Ironing the bright shirts", "Stocking the shelves", "Ready"],
-  ms: 2000,
+  ms: 1000,
 }, () => showView(startAt));
 </script>
 </body>

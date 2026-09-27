@@ -16,11 +16,11 @@ assets/*.pdf
 !assets/resume.pdf
 
 # Original phone photos (full size, with location metadata): publish only the
-# stripped, resized copy (e.g. assets/karthik.jpg)
+# stripped, resized WebP copies in assets/img/
 assets/IMG_*
 
-# Original photos for the collage (full size, with location metadata):
-# only the stripped copies in assets/gallery/ are published
+# Original photos (full size, with location metadata): never published.
+# Only the stripped, resized WebP copies in assets/img/ are
 assets/photos/
 
 # Full-size source of the brand logo (the site uses assets/brand/loreal-paris-logo.png)

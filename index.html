@@ -2,122 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title></title>
-<meta name="description" content="">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Fonts load without blocking the first paint (system fallbacks show until they arrive). -->
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400&family=Figtree:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400&family=Figtree:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400&family=Figtree:wght@400;500;600&display=swap"></noscript>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Karthik OS</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="game.html">
 <link rel="icon" href="favicon.png" type="image/png">
-<link rel="stylesheet" href="styles.css?v=20260927144557">
-<!-- Scroll "camera" (scenes 1–4). Pinned versions; if either fails to load, the site
-     falls back to five normal sections. -->
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" integrity="sha512-oJ8QbaQThQoJZ7oEv+29jfPM6CcP+zUxh3PKJs1vyOhx0UraUrE7PQgeItu3dOuCJyrzWpoYMsVjkkPEBzbUqw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js" integrity="sha512-OaIE7ud4P04EhnBuhEcm0wQSceIxbi2pV03oBLS/+F6ampfxsnxcIxOp7H2eF9G7N0kEht0VAzOLG+dTLSo17Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- The site now lives in game.html. Send visitors there, keeping any #room link. -->
+<meta http-equiv="refresh" content="0; url=game.html">
+<script>location.replace("game.html" + location.hash);</script>
 </head>
 <body>
-
-<!-- Scene progress + jump links. Labels come from content.js (steps). -->
-<nav class="steps" data-steps></nav>
-
-<main>
-  <!-- Scenes 1–4. With the scroll camera on, this block is pinned and the four
-       scenes are stacked as layers of one timeline; otherwise they are ordinary
-       full-screen sections. -->
-  <div class="journey" id="journey">
-  <!-- ============ 1. Aisle ============ -->
-  <section class="scene scene--aisle" id="aisle" tabindex="-1" aria-labelledby="aisle-headline">
-    <div class="aisle__camera"><picture class="aisle__bg" data-aisle-image></picture></div>
-    <div class="aisle__card reveal">
-      <h1 class="aisle__headline" id="aisle-headline" data-text="aisle.headline"></h1>
-      <p class="aisle__subline" data-text="aisle.subline"></p>
-      <a class="next" href="#shelf" data-text="aisle.next"></a>
-    </div>
-  </section>
-
-  <!-- ============ 2. Shelf ============ -->
-  <section class="scene scene--shelf" id="shelf" tabindex="-1" aria-labelledby="shelf-line">
-    <p class="shelf__line reveal" id="shelf-line" data-text="shelf.line"></p>
-
-    <div class="shelf__stage reveal">
-      <!-- Out-of-focus generic packs: plain shapes, no text, no brands. -->
-      <svg class="shelf__packs" viewBox="0 0 1600 420" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">
-        <g fill="#d6cfc4"><rect x="40" y="170" width="120" height="250" rx="10"/><rect x="72" y="140" width="56" height="34" rx="6" fill="#bfb6a8"/></g>
-        <g fill="#c7cdc2"><rect x="185" y="250" width="150" height="170" rx="36"/><rect x="200" y="222" width="120" height="34" rx="8" fill="#b3baae"/></g>
-        <g fill="#ddd0c4"><rect x="360" y="110" width="84" height="310" rx="40"/><rect x="384" y="66" width="36" height="48" rx="5" fill="#c8b7a8"/><rect x="398" y="40" width="46" height="12" rx="4" fill="#c8b7a8"/></g>
-        <g fill="#bfc6cb"><rect x="468" y="200" width="112" height="220" rx="4"/></g>
-        <g fill="#e4ddd2"><rect x="598" y="150" width="96" height="270" rx="30"/><rect x="620" y="118" width="52" height="36" rx="6" fill="#cfc5b6"/></g>
-        <g fill="#cfc2b2"><rect x="906" y="232" width="140" height="188" rx="44"/><rect x="922" y="206" width="108" height="30" rx="8" fill="#b9ab99"/></g>
-        <g fill="#d8d4cc"><path d="M1076 420 V150 q0-30 30-40 h36 q30 10 30 40 V420 z"/><rect x="1110" y="76" width="28" height="36" rx="4" fill="#c2bdb3"/></g>
-        <g fill="#c9c3cc"><rect x="1198" y="190" width="104" height="230" rx="6"/></g>
-        <g fill="#d3cabd"><rect x="1326" y="130" width="78" height="290" rx="38"/><rect x="1346" y="96" width="38" height="38" rx="6" fill="#bdb2a3"/></g>
-        <g fill="#c5ccc6"><rect x="1428" y="228" width="140" height="192" rx="12"/><rect x="1440" y="206" width="116" height="26" rx="6" fill="#b1b9b2"/></g>
-      </svg>
-      <div class="shelf__glow" aria-hidden="true"></div>
-      <div class="bottle bottle--shelf" data-bottle="shelf"></div>
-    </div>
-
-    <div class="shelf__plank" aria-hidden="true"><div class="shelf__top"></div><div class="shelf__edge"></div></div>
-    <a class="next" href="#front" data-text="shelf.next"></a>
-  </section>
-
-  <!-- ============ 3. Front ============ -->
-  <section class="scene scene--bottle" id="front" tabindex="-1" aria-labelledby="front-heading">
-    <div class="bottle-scene__head reveal">
-      <h2 id="front-heading" data-text="front.heading"></h2>
-      <p data-text="front.hint"></p>
-    </div>
-    <div class="bottle-scene__body reveal">
-      <div class="bottle-scene__stage">
-        <div class="bottle bottle--pinned" data-bottle="front"></div>
-      </div>
-      <div class="panel-slot"><aside class="panel" data-panel="front" aria-live="polite"></aside></div>
-    </div>
-    <a class="next" href="#back" data-text="front.next"></a>
-  </section>
-
-  <!-- ============ 4. Back ============ -->
-  <section class="scene scene--bottle" id="back" tabindex="-1" aria-labelledby="back-heading">
-    <div class="bottle-scene__head reveal">
-      <h2 id="back-heading" data-text="back.heading"></h2>
-      <p data-text="back.hint"></p>
-    </div>
-    <div class="bottle-scene__body reveal">
-      <div class="bottle-scene__stage">
-        <div class="bottle bottle--pinned" data-bottle="back"></div>
-      </div>
-      <div class="panel-slot"><aside class="panel" data-panel="back" aria-live="polite"></aside></div>
-    </div>
-    <a class="next" href="#fin" data-text="back.next"></a>
-  </section>
-  </div>
-
-  <!-- ============ 5. Fin ============ -->
-  <section class="scene scene--fin" id="fin" tabindex="-1" data-label="steps.fin">
-    <div class="fin reveal">
-      <figure class="fin__media" data-fin-media></figure>
-      <div class="fin__text">
-        <a class="button" data-fin-resume></a>
-        <ul class="fin__links" data-fin-links></ul>
-        <p class="fin__fineprint" data-text="fin.fineprint"></p>
-        <p class="fin__credits" data-text="fin.credits"></p>
-        <a class="next next--back" href="#aisle" data-text="fin.backToAisle"></a>
-      </div>
-    </div>
-    <!-- Photo wall: fills the page around the block above (a grid below it on phones). -->
-    <ul class="gallery" data-gallery></ul>
-  </section>
-
-  <!-- The closing line: the last thing on the page, on its own. -->
-  <section class="closing" id="closing" aria-labelledby="closing-line">
-    <h2 class="closing__line reveal" id="closing-line" data-text="fin.closingLine"></h2>
-  </section>
-</main>
-
-<script src="content.js?v=20260927144557"></script>
-<script src="main.js?v=20260927144557"></script>
+<p><a href="game.html">Continue to Karthik OS</a></p>
 </body>
 </html>
