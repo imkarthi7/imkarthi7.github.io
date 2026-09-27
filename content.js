@@ -254,6 +254,9 @@ window.CONTENT = {
      * the polaroid's bottom edge).
      */
     galleryLabel: "Photos",
+    // Phones show only the first few photos of the list (a 3-column grid, so
+    // multiples of 3 look tidiest). Tablets and desktops show them all.
+    galleryPhoneCount: 9,
     gallery: [
       { src: "assets/gallery/285818b6-6593-444a-ba24.webp", thumb: "assets/gallery/285818b6-6593-444a-ba24-480.webp", width: 1200, height: 675, alt: "Selfie in a stockroom stacked with cartons and sacks" },
       { src: "assets/gallery/01e66c5e-a9a9-4d03-94d4.webp", thumb: "assets/gallery/01e66c5e-a9a9-4d03-94d4-480.webp", width: 1200, height: 900, alt: "In a red stole with a friend at an evening graduation" },

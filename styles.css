@@ -630,6 +630,7 @@ span.button { background: none; color: inherit; padding-left: 0; }
   grid-template-columns: repeat(3, 1fr);
   gap: 18px 14px;
 }
+@media (max-width: 767px) { .polaroid--extra { display: none; } }
 .polaroid figure {
   margin: 0;
   padding: 6% 6% 17%;

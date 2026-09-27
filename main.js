@@ -533,8 +533,10 @@
     gal.remove();
   } else {
     gal.setAttribute("aria-label", f.galleryLabel);
+    var phoneCount = f.galleryPhoneCount || photos.length;
     photos.forEach(function (p, i) {
       var li = el("li", "polaroid");
+      if (i >= phoneCount) li.classList.add("polaroid--extra"); // hidden on phones (CSS)
       // Tilt ±2–4°, alternating, a little different each time.
       li.style.setProperty("--tilt", ((i % 2 ? 1 : -1) * (2 + 2 * wobble(i + 7))).toFixed(2) + "deg");
       var fig = document.createElement("figure");
@@ -666,7 +668,12 @@
   function preloadFin() {
     if (finDone) return;
     finDone = true;
-    document.querySelectorAll("#fin img[loading=lazy]").forEach(function (img) { img.loading = "eager"; });
+    // (Photos hidden on phones stay lazy, so phones never download them.)
+    var phone = !window.matchMedia("(min-width: 768px)").matches;
+    document.querySelectorAll("#fin img[loading=lazy]").forEach(function (img) {
+      if (phone && img.closest(".polaroid--extra")) return;
+      img.loading = "eager";
+    });
   }
   // Without the scroll camera: start both once the Front scene comes into view.
   if ("IntersectionObserver" in window) {
