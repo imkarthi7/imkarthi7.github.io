@@ -11,10 +11,14 @@ any `#room` link, e.g. `/#beauty`).
 |---|---|
 | `game.html` | The site: loader, desk, three folder rooms, contact page |
 | `index.html` | Redirect to `game.html` |
-| `assets/karthik.jpg` | Photo on Folder 01, card 01 and the contact badge |
+| `assets/img/karthik.webp` | Photo on Folder 01, card 01 |
+| `assets/img/karthik-badge.webp` | Small photo on the Contact page badge |
+| `assets/img/motto.webp` | Photo on Folder 01, card 05 (My motto) |
+| `assets/img/loreal-products.webp` | Photo on the L'Oréal Paris card |
 | `assets/brand/loreal-paris-logo.png` | Logo on the L'Oréal Paris card |
-| `assets/gallery/loreal-products.webp` | Photo on the L'Oréal Paris card |
-| `assets/resume.pdf` | The résumé every CV link points to |
+| `assets/og-image.png` | Preview image shown when the link is shared (1200 × 630) |
+| `assets/Karthik_J_Resume.pdf` | The résumé every CV link points to |
+| `assets/resume.pdf` | Identical copy at the résumé's old address, so older links keep working (replace both together) |
 | `favicon.png`, `favicon.ico` | Browser tab icon |
 | `tools/publish.sh` | Commit and push to GitHub Pages |
 

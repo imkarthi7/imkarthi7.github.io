@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Karthik OS</title>
 <meta name="description" content="Karthik's creative CV for L'Oréal, played as an 8-bit game.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://imkarthi7.github.io/">
+<meta property="og:title" content="Karthik OS · Creative CV for L'Oréal">
+<meta property="og:description" content="A creative CV, played as an 8-bit game.">
+<meta property="og:image" content="https://imkarthi7.github.io/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Pixel-art Karthik beside the words KARTHIK OS, Creative CV for L'Oréal">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -340,7 +349,10 @@ li.todo::before { display: none; }
 .soc svg { width: 30px; height: 30px; }
 .soc-hero { position: relative; width: 78px; height: 96px; }
 .soc-hero img { width: 78px; height: 96px; display: block; animation: bob 1.1s steps(2) infinite; }
-.email-line { font-family: var(--read); font-size: 18px; }
+.reach { display: grid; gap: 2px; justify-items: center; font-family: var(--read); font-size: 18px; }
+.reach-row { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0 4px; }
+.reach a { min-height: 44px; display: inline-flex; align-items: center; padding: 0 6px; color: var(--ink); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.reach a:hover { color: var(--gold-deep); }
 
 /* Achievement toast: top-right corner, clear of the cards and their buttons */
 #toast {
@@ -512,8 +524,11 @@ const PROFILE = {
   name: "Karthik",
   handle: "Karthik · MICA-26",
   email: "imkarthi7@gmail.com",
+  email2: "karthikj.24@micamail.in",
+  phone: "+91 82815 89234",
+  phoneHref: "tel:+918281589234",
   linkedin: "https://www.linkedin.com/in/karthik-jeyakumar/",
-  resume: "assets/resume.pdf",
+  resume: "assets/Karthik_J_Resume.pdf",
   photo: "assets/img/karthik-badge.webp",
 };
 
@@ -609,7 +624,7 @@ const FOLDERS = [
       },
       {
         tag: "PROOF OF CLAIM",
-        title: "Deliver what you promise",
+        title: "What we share",
         body: ["That is something I believe in too: deliver what you promise."],
       },
     ],
@@ -652,7 +667,7 @@ const FOLDERS = [
         title: "Continue?",
         body: ["Thanks for playing. The full résumé is one click away — and I'd love to continue this in person."],
         actions: [
-          { label: "Get the CV (PDF)", href: "assets/resume.pdf" },
+          { label: "Get the CV (PDF)", href: "assets/Karthik_J_Resume.pdf" },
           { label: "Contact me", go: "contact" },
         ],
       },
@@ -816,12 +831,13 @@ function wavy(text, cls) {
   });
   return h;
 }
-function copyButton(target) {
+function copyButton(target, value = target.textContent) {
   const copy = el("button", "copy", "copy");
   copy.type = "button";
+  copy.setAttribute("aria-label", "Copy " + value);
   copy.addEventListener("click", async (e) => {
     e.stopPropagation();
-    try { await navigator.clipboard.writeText(PROFILE.email); copy.textContent = "copied"; }
+    try { await navigator.clipboard.writeText(value); copy.textContent = "copied"; }
     catch { const r = document.createRange(); r.selectNodeContents(target); getSelection().removeAllRanges(); getSelection().addRange(r); copy.textContent = "selected"; }
     setTimeout(() => (copy.textContent = "copy"), 1600);
   });
@@ -1585,6 +1601,7 @@ function renderDetail(dir = 0) {
   $("#dPrev").disabled = S.active === 0;
   $("#dNext").disabled = S.active === total - 1;
   $("#dNextTitle").textContent = S.active < total - 1 ? f.cards[S.active + 1].title : "";
+  if (S.detail) fitDetail();
   markRead(S.fi, S.active);
   updateToc();
   // Content slides in from the side you're heading to, one piece after another
@@ -1594,6 +1611,17 @@ function renderDetail(dir = 0) {
   ], { duration: 420, delay: 60 + i * 60 }));
 }
 
+// Two-column layout: shrink the open card until its bottom (Prev/Next) sits on screen
+function fitDetail() {
+  const d = $("#detail");
+  d.style.maxHeight = "";
+  if (d.hidden || narrowLayout()) return;
+  for (let k = 0; k < 5; k++) {
+    const r = d.getBoundingClientRect(), over = r.bottom - (innerHeight - 16);
+    if (over <= 0.5) break;
+    d.style.maxHeight = Math.floor(r.height - over) + "px";
+  }
+}
 function openDetail() {
   if (S.detail) return;
   sfx("open");
@@ -1603,6 +1631,7 @@ function openDetail() {
   $("#stackWrap").hidden = true;
   const d = $("#detail"); d.hidden = false;
   renderDetail(0);
+  fitDetail();
   // The card grows out of the stack into the reading panel
   const to = d.getBoundingClientRect();
   if (from && to.width) anim(d, [
@@ -1634,7 +1663,7 @@ $("#detailBody").addEventListener("pointerup", (e) => {
   const dx = e.clientX - swipe.x, dy = e.clientY - swipe.y; swipe = null;
   if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) stepStack(dx < 0 ? 1 : -1);
 });
-addEventListener("resize", () => { if (view === "folder") { tocHero._y = null; stackLayout(); } });
+addEventListener("resize", () => { if (view === "folder") { tocHero._y = null; stackLayout(); if (S.detail) fitDetail(); } });
 
 /* =====================================================================
    Contact room
@@ -1654,10 +1683,16 @@ function buildContact() {
   };
   const guy = el("div", "soc-hero"); const gi = el("img", "pixel"); gi.src = F3.front[1]; gi.alt = ""; guy.append(gi); guy.setAttribute("aria-hidden", "true");
   socials.append(guy, soc(PROFILE.linkedin, "linkedin", "LinkedIn", true), soc("mailto:" + PROFILE.email, "mail", "Email"), soc(PROFILE.resume, "cv", "CV (PDF)", true));
-  const mail = el("div", "email-line");
-  const addr = el("span", null, PROFILE.email);
-  mail.append(addr, copyButton(addr));
-  c.append(handle, wavy("LET'S TALK"), socials, mail);
+  // Phone and both emails, each tappable; the emails get a copy button
+  const reach = el("div", "reach");
+  const row = (href, text, withCopy) => {
+    const r = el("div", "reach-row"), a = el("a", null, text);
+    a.href = href; r.append(a);
+    if (withCopy) r.append(copyButton(a, text));
+    return r;
+  };
+  reach.append(row(PROFILE.phoneHref, PROFILE.phone), row("mailto:" + PROFILE.email, PROFILE.email, true), row("mailto:" + PROFILE.email2, PROFILE.email2, true));
+  c.append(handle, wavy("LET'S TALK"), socials, reach);
 }
 
 /* =====================================================================
