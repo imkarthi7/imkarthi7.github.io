@@ -178,11 +178,75 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .folder .fmeta { font-size: 14px; color: var(--grey); margin-top: -8px; }
 .folder:focus-visible { outline: none; }
 
-.guide { display: flex; align-items: flex-end; gap: 14px; }
-.guide img { width: 48px; height: 72px; animation: idle 1s steps(2) infinite; }
-.bubble { position: relative; padding: 10px 14px; font-size: 16px; max-width: 280px; margin-bottom: 30px; }
-.bubble::after { content: ""; position: absolute; left: -12px; bottom: 8px; width: 8px; height: 8px; background: var(--ink); box-shadow: -4px 4px 0 var(--ink); }
+.folder { position: relative; }
+.folder.near svg { transform: translateY(-8px); }
+.folder.near .fname { background: var(--ink); color: #fff; }
+.folder.near::before { /* gold floor marker under the folder he's standing at */
+  content: ""; position: absolute; left: 22%; right: 22%; bottom: -6px; height: 4px;
+  background: repeating-linear-gradient(90deg, var(--gold) 0 8px, transparent 8px 12px);
+}
+.folder .stamp {
+  position: absolute; top: 4px; right: 6px; transform: rotate(8deg);
+  font-family: var(--display); font-size: 7px; letter-spacing: .08em;
+  background: var(--gold); color: var(--ink); padding: 4px 5px; box-shadow: 2px 2px 0 var(--ink);
+}
+
+/* The walkable desk */
+.desk-main { position: relative; cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' shape-rendering='crispEdges'%3E%3Cpath d='M2 2h2v2h2v2h2v2h2v2h2v2h2v2h-4v2h2v2h2v2h-2v2h-2v-2h-2v-2h-2v2h-2v2H2z' fill='%230d0d0e'/%3E%3Cpath d='M4 6h2v2h2v2h2v2h2v2h-2v2H8v2H6v2H4z' fill='%23c5a052'/%3E%3C/svg%3E") 2 2, auto; }
+.desk-main button, .desk-main a { cursor: pointer; }
+.how {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 18px;
+  font-family: var(--display); font-size: 8px; line-height: 1.8; letter-spacing: .08em; color: var(--grey); text-transform: uppercase;
+}
+.how kbd { font-family: inherit; color: var(--ink); background: var(--card); padding: 3px 5px; box-shadow: 0 2px 0 var(--ink), 0 -2px 0 var(--ink), 2px 0 0 var(--ink), -2px 0 0 var(--ink); margin: 0 2px; }
+.play-space { height: 120px; } /* open floor below the folders */
+
+#hero { position: absolute; left: 0; top: 0; z-index: 6; pointer-events: none; will-change: transform; }
+#hero .fig { position: relative; width: 64px; height: 96px; }
+#hero .fig img { width: 64px; height: 96px; display: block; position: relative; }
+#hero.left .fig img { transform: scaleX(-1); }
+#hero.idle .fig img { animation: idle 1.1s steps(2) infinite; }
+#hero.left.idle .fig img { animation-name: idleL; }
+#hero.hop .fig img { animation: hop .32s steps(4) 1; }
+#hero.left.hop .fig img { animation-name: hopL; }
+#hero .shadow { position: absolute; left: 12px; right: 12px; bottom: -3px; height: 6px; background: rgba(13,13,14,.16); }
 @keyframes idle { 50% { transform: translateY(-3px); } }
+@keyframes idleL { 0%, 100% { transform: scaleX(-1); } 50% { transform: scaleX(-1) translateY(-3px); } }
+@keyframes hop { 40% { transform: translateY(-22px); } 100% { transform: translateY(0) scale(.2); opacity: 0; } }
+@keyframes hopL { 0% { transform: scaleX(-1); } 40% { transform: scaleX(-1) translateY(-22px); } 100% { transform: scaleX(-1) scale(.2); opacity: 0; } }
+
+.bubble {
+  position: absolute; bottom: calc(100% + 14px); left: 32px; transform: translateX(-24px);
+  width: max-content; max-width: min(250px, 70vw);
+  padding: 9px 12px; font-size: 15px; line-height: 1.35;
+}
+.bubble::after { content: ""; position: absolute; left: 20px; bottom: -12px; width: 8px; height: 8px; background: var(--ink); box-shadow: 4px -4px 0 var(--ink); }
+#hero.edge-r .bubble { transform: translateX(calc(-100% + 24px)); }
+#hero.edge-r .bubble::after { left: auto; right: 20px; box-shadow: -4px -4px 0 var(--ink); }
+.bubble b { color: var(--gold-deep); font-weight: 700; }
+
+.dust { position: absolute; z-index: 5; width: 6px; height: 6px; background: #cfcbc2; pointer-events: none; animation: dust .45s steps(4) forwards; }
+@keyframes dust { to { transform: translate(var(--dx), -12px) scale(.3); opacity: 0; } }
+.spark { position: absolute; z-index: 7; width: 6px; height: 6px; background: var(--gold); pointer-events: none; box-shadow: 1px 1px 0 var(--ink); animation: spark .6s steps(6) forwards; }
+@keyframes spark { to { transform: translate(var(--dx), var(--dy)); opacity: 0; } }
+
+/* Quest tracker + achievement */
+.quest { display: flex; align-items: center; gap: 8px; color: #a9a59c; }
+.quest i { width: 10px; height: 10px; background: #3a3a40; display: inline-block; }
+.quest i.on { background: var(--gold); }
+#toast {
+  position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); z-index: 45;
+  transform: translateX(-50%); width: min(420px, calc(100% - 32px));
+  background: var(--ink); color: #fff; padding: 14px 16px; display: grid; gap: 8px;
+  box-shadow: 0 -4px 0 var(--gold), 0 4px 0 var(--gold), -4px 0 0 var(--gold), 4px 0 0 var(--gold);
+  animation: toastIn .3s steps(3);
+}
+#toast .t { font-family: var(--display); font-size: 9px; letter-spacing: .12em; color: var(--gold); }
+#toast p { margin: 0; font-size: 16px; }
+#toast .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+#toast a { color: var(--gold); }
+#toast button { border: 0; background: none; color: #a9a59c; font-family: var(--display); font-size: 8px; margin-left: auto; }
+@keyframes toastIn { from { transform: translate(-50%, 30px); opacity: 0; } }
 
 .desk-foot {
   display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: space-between; align-items: center;
@@ -231,7 +295,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   width: var(--w); height: min(480px, calc(100% - 48px));
   margin-left: calc(var(--w) / -2);
   transform-style: preserve-3d;
-  transition: transform .5s cubic-bezier(.2,.8,.2,1), opacity .4s, filter .4s;
+  transition: transform .5s cubic-bezier(.2,.8,.2,1), rotate .18s ease-out, opacity .4s, filter .4s;
   display: flex; flex-direction: column;
   background: var(--card);
   box-shadow:
@@ -282,8 +346,12 @@ li.todo::before { display: none; }
 #count { font-family: var(--display); font-size: 10px; font-variant-numeric: tabular-nums; min-width: 48px; text-align: center; }
 .hint { font-size: 14px; color: var(--grey); text-align: center; margin: -10px 0 0; padding-bottom: 12px; }
 
+.topbar .brand { white-space: nowrap; }
+@media (max-width: 760px) {
+  .topbar .clock, .quest > span:first-child { display: none; }
+}
 @media (max-width: 560px) {
-  .topbar .clock { display: none; }
+  .topbar .brand span { display: none; }
   .win-bar { padding-right: 132px; }
   .win-bar .path { display: none; }
   .folders { gap: 12px 8px; }
@@ -294,7 +362,8 @@ li.todo::before { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .slide, .folder svg, #boot { transition: none; }
-  .guide img { animation: none; }
+  #hero .fig img { animation: none !important; }
+  .dust, .spark { display: none; }
 }
 </style>
 </head>
@@ -321,7 +390,10 @@ li.todo::before { display: none; }
 <div id="desktop" aria-hidden="true">
   <header class="topbar">
     <div class="brand"><b>■</b> KARTHIK OS <span style="color:#a9a59c">v26</span></div>
-    <div class="clock" id="clock" style="margin-right:130px"></div>
+    <div style="display:flex;gap:18px;align-items:center;margin-right:130px">
+      <div class="quest" id="quest" title="Folders opened"><span>Files</span><span id="questDots"></span><span id="questN">0/3</span></div>
+      <div class="clock" id="clock"></div>
+    </div>
   </header>
   <main class="desk-main">
     <div class="hello">
@@ -330,9 +402,11 @@ li.todo::before { display: none; }
       <p class="lede">Three folders, one person. Open any of them to flip through the cards inside.</p>
     </div>
     <div class="folders" id="folders"></div>
-    <div class="guide" aria-hidden="true">
-      <img id="guide" class="pixel" alt="">
-      <div class="bubble px-box">Hi, I'm Karthik. Pick a folder, any folder.</div>
+    <p class="how" id="how"></p>
+    <div class="play-space" aria-hidden="true"></div>
+    <div id="hero" class="idle" aria-hidden="true">
+      <div class="bubble px-box" id="say"></div>
+      <div class="fig"><div class="shadow"></div><img id="heroImg" class="pixel" alt=""></div>
     </div>
   </main>
   <footer class="desk-foot">
@@ -625,12 +699,17 @@ function showDesktop() {
   $("#desktop").removeAttribute("aria-hidden");
   $("#nav").hidden = false;
   setTimeout(() => { $("#boot").hidden = true; }, 400);
-  $("#folders .folder")?.focus({ preventScroll: true });
+  startHero();
 }
 
 /* =====================================================================
    Desktop
    ===================================================================== */
+const TOUCH = matchMedia("(hover: none)").matches;
+let opened = new Set();
+try { opened = new Set(JSON.parse(localStorage.getItem("karthikos-opened") || "[]")); } catch {}
+let achievementDue = false;
+
 function buildDesktop() {
   const holder = $("#folders");
   FOLDERS.forEach((f, i) => {
@@ -639,15 +718,214 @@ function buildDesktop() {
     b.innerHTML = folderSVG(f.emblem);
     b.append(el("span", "fname", f.name), el("span", "fmeta", `${f.cards.length} cards`));
     b.setAttribute("aria-label", `Open ${f.name}, ${f.cards.length} cards`);
-    b.addEventListener("click", () => openFolder(i));
+    b.addEventListener("click", () => approach(i));
     holder.append(b);
   });
-  $("#guide").src = FRAME_A;
+  $("#how").innerHTML = TOUCH
+    ? "<span>Tap the floor to walk</span><span>Tap a folder to open it</span>"
+    : "<span>Move <kbd>Mouse</kbd> or <kbd>Arrows</kbd> <kbd>WASD</kbd></span><span>Open <kbd>Click</kbd> or <kbd>Enter</kbd></span>";
+  $("#questDots").innerHTML = FOLDERS.map(() => "<i></i>").join(" ");
+  updateQuest();
   $("#contact").replaceWith(contactBlock(true));
   const clock = $("#clock");
   const t = () => { clock.textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }); };
   t(); setInterval(t, 15000);
 }
+
+function updateQuest() {
+  [...$("#questDots").children].forEach((d, i) => d.classList.toggle("on", opened.has(i)));
+  $("#questN").textContent = `${opened.size}/${FOLDERS.length}`;
+  [...$("#folders").children].forEach((b, i) => {
+    b.querySelector(".stamp")?.remove();
+    if (opened.has(i)) b.append(el("span", "stamp", "Opened"));
+  });
+}
+function markOpened(i) {
+  if (opened.has(i)) return;
+  opened.add(i);
+  try { localStorage.setItem("karthikos-opened", JSON.stringify([...opened])); } catch {}
+  updateQuest();
+  if (opened.size === FOLDERS.length) achievementDue = true;
+}
+function showAchievement() {
+  $("#toast")?.remove();
+  const t = el("div"); t.id = "toast"; t.setAttribute("role", "status");
+  t.innerHTML = `<span class="t">Achievement unlocked</span>
+    <p>You opened every file. Next level: a conversation.</p>`;
+  const row = el("div", "row");
+  const cv = el("a", null, "Get the CV"); cv.href = PROFILE.resume; cv.target = "_blank"; cv.rel = "noopener";
+  const x = el("button", null, "Dismiss"); x.type = "button"; x.addEventListener("click", () => t.remove());
+  row.append(cv, el("span", null, PROFILE.email), x);
+  t.append(row);
+  document.body.append(t);
+  burst(H.x, H.y - 60, 16);
+  say("That's everything! <b>Let's talk?</b>", 6000);
+}
+
+/* =====================================================================
+   The walking character
+   ===================================================================== */
+const desk = $(".desk-main"), hero = $("#hero"), heroImg = $("#heroImg"), bubble = $("#say");
+const H = { x: 0, y: 0, tx: null, ty: null, stopAt: 4, keys: new Set(), dash: null, left: false,
+  frame: 0, lastFrame: 0, lastDust: 0, lastInput: 0, near: -1, idleLine: 0, running: false };
+const IDLE_LINES = [
+  "Fun fact: I was manufactured in Thiruvananthapuram.",
+  "Yes, the shirts really are that bright.",
+  "Tip: the arrow keys and WASD work too.",
+  "What if it all works out?",
+  "Not sure where to start? Try <b>Player Profile</b>.",
+];
+let sayTimer = 0;
+function say(html, ms) {
+  clearTimeout(sayTimer);
+  bubble.innerHTML = html;
+  bubble.hidden = false;
+  if (ms) sayTimer = setTimeout(() => { if (H.near === -1) bubble.hidden = true; }, ms);
+}
+function bounds() {
+  return { minX: 34, maxX: desk.clientWidth - 34, minY: 110, maxY: desk.clientHeight - 10 };
+}
+function doorOf(i) {
+  const d = desk.getBoundingClientRect(), r = $("#folders").children[i].getBoundingClientRect();
+  return { x: r.left - d.left + r.width / 2, y: r.bottom - d.top + 6, r: {
+    l: r.left - d.left - 30, t: r.top - d.top - 20, rr: r.right - d.left + 30, b: r.bottom - d.top + 60 } };
+}
+function placeHero() {
+  const b = bounds(), ps = $(".play-space");
+  H.x = desk.clientWidth / 2;
+  H.y = Math.min(b.maxY, ps.offsetTop + ps.offsetHeight - 14);
+  renderHero();
+}
+function renderHero() {
+  hero.style.transform = `translate(${Math.round(H.x - 32)}px, ${Math.round(H.y - 96)}px)`;
+  hero.classList.toggle("left", H.left);
+  hero.classList.toggle("edge-r", H.x > desk.clientWidth - 190);
+}
+function dust() {
+  const d = el("div", "dust");
+  d.style.left = H.x + (H.left ? 10 : -16) + "px";
+  d.style.top = H.y - 6 + "px";
+  d.style.setProperty("--dx", (H.left ? 10 : -10) + "px");
+  desk.append(d);
+  setTimeout(() => d.remove(), 500);
+}
+function burst(x, y, n = 10) {
+  if (reduceMotion) return;
+  for (let k = 0; k < n; k++) {
+    const s = el("div", "spark");
+    const a = (k / n) * Math.PI * 2, r = 30 + Math.random() * 30;
+    s.style.left = x + "px"; s.style.top = y + "px";
+    s.style.setProperty("--dx", Math.round(Math.cos(a) * r / 2) * 2 + "px");
+    s.style.setProperty("--dy", Math.round(Math.sin(a) * r / 2) * 2 + "px");
+    desk.append(s);
+    setTimeout(() => s.remove(), 650);
+  }
+}
+function setNear(i) {
+  if (i === H.near) return;
+  const prev = H.near;
+  H.near = i;
+  [...$("#folders").children].forEach((b, n) => b.classList.toggle("near", n === i));
+  if (i === -1) { if (prev >= 0) bubble.hidden = true; return; }
+  const f = FOLDERS[i];
+  const what = f.eyebrow.replace(/^Folder \d+ · /, "");
+  const again = opened.has(i) ? " (opened)" : "";
+  say(`<b>${f.name}</b>${again}<br>${what}. ${TOUCH ? "Tap it to open." : "Press Enter or click."}`);
+}
+
+function step(now) {
+  const dt = Math.min(0.05, (now - (H.t || now)) / 1000);
+  H.t = now;
+  if (win.hidden && !H.hopping) {
+    let vx = 0, vy = 0, speed = 230;
+    if (H.keys.size) {
+      vx = (H.keys.has("r") ? 1 : 0) - (H.keys.has("l") ? 1 : 0);
+      vy = (H.keys.has("d") ? 1 : 0) - (H.keys.has("u") ? 1 : 0);
+      const m = Math.hypot(vx, vy) || 1; vx /= m; vy /= m;
+    } else if (H.tx != null) {
+      const dx = H.tx - H.x, dy = H.ty - H.y, dist = Math.hypot(dx, dy);
+      if (H.dash) speed = H.dash.speed;
+      if (dist > H.stopAt) {
+        const move = Math.min(dist - H.stopAt + 0.01, speed * dt);
+        vx = (dx / dist) * move / (speed * dt || 1); vy = (dy / dist) * move / (speed * dt || 1);
+      } else {
+        H.tx = null;
+        if (H.dash) { const done = H.dash.done; H.dash = null; done(); }
+      }
+    }
+    const moving = Math.abs(vx) + Math.abs(vy) > 0.02;
+    if (moving) {
+      const b = bounds();
+      H.x = Math.max(b.minX, Math.min(b.maxX, H.x + vx * speed * dt));
+      H.y = Math.max(b.minY, Math.min(b.maxY, H.y + vy * speed * dt));
+      if (vx < -0.1) H.left = true; else if (vx > 0.1) H.left = false;
+      if (now - H.lastFrame > (H.dash ? 90 : 140)) { H.frame ^= 1; H.lastFrame = now; heroImg.src = H.frame ? FRAME_B : FRAME_A; }
+      if (!reduceMotion && now - H.lastDust > 120) { H.lastDust = now; dust(); }
+      hero.classList.remove("idle");
+      H.lastInput = now;
+    } else if (!hero.classList.contains("idle")) {
+      heroImg.src = FRAME_A; hero.classList.add("idle");
+    }
+    // Which folder is he standing at?
+    let near = -1;
+    for (let i = 0; i < FOLDERS.length; i++) {
+      const { r } = doorOf(i);
+      if (H.x > r.l && H.x < r.rr && H.y > r.t && H.y < r.b) { near = i; break; }
+    }
+    setNear(near);
+    // Say something if left alone for a while
+    if (!moving && near === -1 && now - H.lastInput > 7000) {
+      H.lastInput = now;
+      say(opened.size === FOLDERS.length ? "You've seen it all. <b>Let's talk?</b>" : IDLE_LINES[H.idleLine++ % IDLE_LINES.length], 4500);
+    }
+    renderHero();
+  }
+  requestAnimationFrame(step);
+}
+
+function startHero() {
+  heroImg.src = FRAME_A;
+  placeHero();
+  say(TOUCH ? "Hi, I'm Karthik! Tap anywhere and I'll walk there."
+            : "Hi, I'm Karthik! I'll follow your cursor. Walk me to a folder.", 6000);
+  H.lastInput = performance.now();
+  if (!H.running) { H.running = true; requestAnimationFrame(step); }
+}
+
+// Walk to a folder, hop in, then open it
+function approach(i) {
+  if (reduceMotion || H.hopping) { if (!H.hopping) openFolder(i); return; }
+  const door = doorOf(i);
+  const dist = Math.hypot(door.x - H.x, door.y - H.y);
+  H.keys.clear();
+  const hopIn = () => {
+    H.hopping = true;
+    hero.classList.remove("idle"); hero.classList.add("hop");
+    burst(H.x, H.y - 70, 10);
+    setTimeout(() => { openFolder(i); hero.classList.remove("hop"); H.hopping = false; }, 320);
+  };
+  if (dist < 12) return hopIn();
+  H.tx = door.x; H.ty = door.y; H.stopAt = 4;
+  H.dash = { speed: Math.max(520, dist / 0.45), done: hopIn };
+}
+
+// Mouse: he follows the cursor. Touch: tap the floor to walk there.
+desk.addEventListener("pointermove", (e) => {
+  if (e.pointerType !== "mouse" || H.dash || H.keys.size) return;
+  const d = desk.getBoundingClientRect();
+  H.tx = e.clientX - d.left; H.ty = e.clientY - d.top + 30; H.stopAt = 36;
+});
+desk.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse" && !H.dash) H.tx = null; });
+desk.addEventListener("pointerdown", (e) => {
+  if (e.target.closest("button, a") || H.dash) return;
+  const d = desk.getBoundingClientRect();
+  H.tx = e.clientX - d.left; H.ty = e.clientY - d.top + (e.pointerType === "mouse" ? 30 : 20); H.stopAt = 4;
+});
+addEventListener("resize", () => {
+  const b = bounds();
+  H.x = Math.max(b.minX, Math.min(b.maxX, H.x)); H.y = Math.max(b.minY, Math.min(b.maxY, H.y));
+  renderHero();
+});
 
 /* =====================================================================
    Global menu
@@ -728,14 +1006,26 @@ function openFolder(i) {
   });
   win.hidden = false;
   $("#desktop").setAttribute("aria-hidden", "true");
+  H.keys.clear(); H.tx = null;
+  markOpened(i);
   layout();
   $("#next").focus({ preventScroll: true });
 }
 function closeFolder() {
   if (current === -1) return;
+  const was = current;
   win.hidden = true; current = -1;
   $("#desktop").removeAttribute("aria-hidden");
-  $("#folders .folder")?.focus({ preventScroll: true });
+  // He steps back out of the folder he was in
+  const door = doorOf(was);
+  H.x = door.x; H.y = Math.min(bounds().maxY, door.y + 72); H.tx = null; H.near = -2;
+  heroImg.src = FRAME_A; renderHero();
+  burst(H.x, H.y - 60, 8);
+  if (achievementDue) { achievementDue = false; showAchievement(); }
+  else {
+    const left = FOLDERS.length - opened.size;
+    say(left ? `Good stuff, right? <b>${left} folder${left > 1 ? "s" : ""}</b> to go.` : "Back on the desk. Pick any folder to revisit.", 4000);
+  }
 }
 function go(n) {
   active = Math.max(0, Math.min(slides.length - 1, n));
@@ -755,6 +1045,7 @@ function layout() {
     s.style.opacity = a > 2 ? 0 : a === 2 ? 0.55 : 1;
     s.style.pointerEvents = a > 2 ? "none" : "";
     s.classList.toggle("active", a === 0);
+    if (a !== 0) s.style.rotate = "";
     s.classList.toggle("side", a !== 0);
     s.setAttribute("aria-hidden", a === 0 ? "false" : "true");
     s.querySelectorAll("a, button").forEach((b) => (b.tabIndex = a === 0 ? 0 : -1));
@@ -781,13 +1072,44 @@ stage.addEventListener("pointerup", (e) => {
 });
 stage.addEventListener("pointercancel", () => (startX = null));
 
+// The front card tilts toward the cursor
+stage.addEventListener("pointermove", (e) => {
+  if (e.pointerType !== "mouse" || reduceMotion) return;
+  const s = slides[active]; if (!s) return;
+  const r = s.getBoundingClientRect();
+  const nx = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (r.width / 2)));
+  const ny = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (r.height / 2)));
+  const inside = e.clientX > r.left && e.clientX < r.right && e.clientY > r.top && e.clientY < r.bottom;
+  const mag = Math.hypot(nx, ny);
+  s.style.rotate = inside && mag > 0.03 ? `${(-ny).toFixed(3)} ${nx.toFixed(3)} 0 ${(7 * Math.min(1, mag)).toFixed(2)}deg` : "";
+});
+stage.addEventListener("pointerleave", () => { if (slides[active]) slides[active].style.rotate = ""; });
+
 // Keyboard
+const MOVE_KEYS = { arrowleft: "l", a: "l", arrowright: "r", d: "r", arrowup: "u", w: "u", arrowdown: "d", s: "d" };
+document.addEventListener("keyup", (e) => { const dir = MOVE_KEYS[e.key.toLowerCase()]; if (dir) H.keys.delete(dir); });
+addEventListener("blur", () => H.keys.clear());
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     if (!navMenu.hidden) { closeMenu(); navBtn.focus(); return; }
     closeFolder(); return;
   }
-  if (current === -1 || !navMenu.hidden) return;
+  if (!navMenu.hidden) return;
+  if (current === -1) {
+    if (!$("#boot").hidden || H.hopping) return;
+    const dir = MOVE_KEYS[e.key.toLowerCase()];
+    if (dir) {
+      e.preventDefault();
+      H.keys.add(dir); H.tx = null; H.dash = null;
+      if (document.activeElement?.closest?.(".folder")) document.activeElement.blur();
+      return;
+    }
+    if ((e.key === "Enter" || e.key === " ") && H.near >= 0 && !e.target.closest("button, a")) {
+      e.preventDefault(); approach(H.near); return;
+    }
+    if (["1", "2", "3"].includes(e.key)) approach(+e.key - 1);
+    return;
+  }
   if (e.key === "ArrowRight") { go(active + 1); e.preventDefault(); }
   if (e.key === "ArrowLeft") { go(active - 1); e.preventDefault(); }
   if (["1", "2", "3"].includes(e.key)) openFolder(+e.key - 1);
