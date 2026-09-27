@@ -166,6 +166,11 @@
   if (!isTodo(C.meta.description)) {
     document.querySelector('meta[name="description"]').content = C.meta.description;
   }
+  // Sections without a visible heading take their name from content.js.
+  document.querySelectorAll("[data-label]").forEach(function (n) {
+    n.setAttribute("aria-label", get(n.getAttribute("data-label")));
+  });
+
   document.querySelectorAll("[data-text]").forEach(function (n) {
     var path = n.getAttribute("data-text");
     fill(n, get(path), path);
@@ -696,9 +701,10 @@
     if (!("IntersectionObserver" in window)) return;
     // The scene crossing the middle of the screen is the current one.
     var stepIO = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) { if (en.isIntersecting) setCurrent(en.target.id); });
+      // The closing line belongs to Fin in the step bar.
+      entries.forEach(function (en) { if (en.isIntersecting) setCurrent(en.target.id === "closing" ? "fin" : en.target.id); });
     }, { rootMargin: "-50% 0px -50% 0px" });
-    sceneEls.forEach(function (s) { stepIO.observe(s); });
+    sceneEls.concat(document.getElementById("closing")).forEach(function (s) { stepIO.observe(s); });
   }
 
   // Progressive enhancement: scenes are visible by default and only hidden once we
@@ -968,7 +974,7 @@
     document.documentElement.classList.remove("is-cine");
     earlyPacks.forEach(function (img) { img.remove(); });
     startSceneSteps();
-    revealAfterLoad(sceneEls);
+    revealAfterLoad(sceneEls.concat(document.getElementById("closing")));
   }
 
   // Runs after the deferred GSAP scripts have executed (or failed to load).
@@ -980,7 +986,7 @@
     }
     try {
       initCine();
-      revealAfterLoad([document.getElementById("fin")]);
+      revealAfterLoad([document.getElementById("fin"), document.getElementById("closing")]);
     } catch (err) {
       console.error(err);
       window.ScrollTrigger.getAll().forEach(function (t) { t.kill(true); });

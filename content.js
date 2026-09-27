@@ -54,7 +54,7 @@ window.CONTENT = {
 
   /* ---------- Scene 2: Shelf ---------- */
   shelf: {
-    line: "TODO: One line for the shelf scene",
+    line: "WHY BLEND IN?",
     next: "Pick it up",
   },
 
@@ -84,12 +84,12 @@ window.CONTENT = {
 
   /* ---------- Scenes 3 and 4: Front and Back ---------- */
   front: {
-    heading: "TODO: Front scene heading",
-    hint: "Tap a label to read it.",
+    heading: "MORE THAN WHAT'S ON THE LABEL",
+    hint: "Tap any part of the bottle",
     next: "Turn it around",
   },
   back: {
-    heading: "TODO: Back scene heading",
+    heading: "THE FINE PRINT",
     hint: "Tap a label to read it.",
     next: "Check out",
   },
@@ -118,7 +118,12 @@ window.CONTENT = {
       pin: { x: 42, y: 10, side: "left" },
       hotspot: { x: 35, y: 3, w: 30, h: 16.5 },
       title: "TODO: About me headline",
-      paragraphs: ["TODO: A short paragraph about you"],
+      paragraphs: [
+        "Ask my batchmates about me and you'll probably hear about the bright shirts, the even brighter phone cases, and a laugh that reaches you before I do. I won't argue.",
+        "My parents always trusted me to make my own choices, so I made them: Electrical Engineering, leaving a stable job for an MBA, moving from Kerala to Ahmedabad, and chasing an off-campus FMCG sales internship because I wanted to work close to consumers.",
+        "MICA was the first time I left home. I knew very little Hindi and had no idea how I'd fit in. So I started talking. From organising an Onam Sadhya for 400+ people to waking up at 5 a.m. for a Rajinikanth first-day-first-show, MICA let me be fully myself. Somewhere along the way, I found sales: people, problem-solving and the thrill of figuring things out.",
+        "There's a line of graffiti at MICA that stayed with me: \"What if it all works out?\" That's how I approach things. I make the choice and give it 100%. What I can't control, I don't worry about.",
+      ],
       list: [
         "EEE engineer",
         "TCS",
@@ -236,7 +241,8 @@ window.CONTENT = {
       alt: "How you'll find me always",
       poster: "",
     },
-    closingLine: "TODO: Closing line",
+    // The site's last line: shown on its own, large, after everything else.
+    closingLine: "What if it all works out?",
     resume: { href: "assets/resume.pdf", text: "Download résumé (PDF)" },
     emailLabel: "Email",
     email: "imkarthi7@gmail.com",

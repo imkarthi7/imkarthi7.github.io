@@ -299,7 +299,7 @@ span.button { background: none; color: inherit; padding-left: 0; }
 .bottle__stamp-text.todo { font-size: 3.2cqw; padding: 0.1em 0.2em; border-width: 1px; border-radius: 3px; }
 
 /* ---------- 3 & 4. Pinned bottle scenes ---------- */
-.bottle-scene__head { text-align: center; max-width: 36rem; margin-bottom: 8px; }
+.bottle-scene__head { text-align: center; max-width: min(100%, 56rem); margin-bottom: 8px; }
 .bottle-scene__head h2 { font-size: clamp(1.4rem, 3.6vw, 2.2rem); margin: 0 auto 4px; }
 .bottle-scene__head p { color: var(--ink-soft); font-size: 0.9375rem; }
 
@@ -563,7 +563,6 @@ span.button { background: none; color: inherit; padding-left: 0; }
   padding: 4px 6px;
 }
 .fin__text { display: flex; flex-direction: column; align-items: center; gap: 14px; }
-.fin__line { font-size: clamp(1.6rem, 4.5vw, 2.8rem); text-wrap: balance; }
 .scene--fin .button { background: var(--paper); color: var(--ink); }
 .scene--fin .button:hover { background: var(--gold-pale); }
 .scene--fin span.button { background: none; color: var(--paper); }
@@ -676,6 +675,25 @@ span.button { background: none; color: inherit; padding-left: 0; }
 @media (min-width: 1024px) {
   .fin { max-width: 720px; }
 }
+
+/* ---------- The closing line ----------
+   Alone on the last screen: large display serif, centred, nothing else. */
+.closing {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: var(--space-8) var(--gutter) calc(var(--space-8) + env(safe-area-inset-bottom, 0px));
+  background: var(--ink);
+  color: var(--paper);
+  text-align: center;
+}
+.closing__line {
+  max-width: 14ch;
+  font: 400 clamp(2.6rem, 9vw, 6.5rem)/1.05 var(--serif);
+  text-wrap: balance;
+}
+.closing.is-waiting:not(.is-in) .reveal { opacity: 0; transform: translateY(14px); }
 
 /* =====================================================================
    Scroll camera (html.is-cine). Scenes 1–4 become stacked layers of one
