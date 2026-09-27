@@ -173,11 +173,55 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 /* ---------- Folder room ---------- */
 .room-head {
-  display: flex; justify-content: flex-end; align-items: center; gap: 18px;
-  padding: 16px 16px 0 150px; min-height: 58px;
+  display: flex; justify-content: flex-end; align-items: center; gap: 18px; flex-wrap: wrap;
+  padding: 14px 16px 0 150px; min-height: 58px;
   font-family: var(--display); font-size: 9px; letter-spacing: .08em; color: var(--grey); text-transform: uppercase;
 }
 .room-head .path b { color: var(--gold-deep); font-weight: 400; }
+.back-btn { margin-right: auto; font-size: 9px; padding: 10px 12px; }
+.back-btn:hover { transform: translateX(-3px); }
+
+/* Achievement meter */
+.quest { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-size: 8px; letter-spacing: .08em; text-transform: uppercase; color: #a9a59c; }
+.light .quest { color: var(--ink); }
+.m-bar { position: relative; width: 128px; height: 16px; padding: 2px; border: 2px solid currentColor; flex: none; }
+.m-bar i { display: block; height: 100%; width: var(--p, 0%); background: var(--gold); transition: width 1s steps(10); }
+.m-bar b { position: absolute; top: 0; bottom: 0; width: 2px; background: currentColor; opacity: .5; }
+.m-pct { color: var(--gold); min-width: 4ch; font-variant-numeric: tabular-nums; }
+.light .m-pct { color: var(--gold-deep); }
+.m-rank { white-space: nowrap; }
+.m-drops { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.m-drops svg { width: 9px; height: 12px; }
+.sfx { border: 0; background: none; font-family: var(--display); font-size: 8px; letter-spacing: .08em; color: inherit; padding: 6px 4px; text-transform: uppercase; opacity: .8; }
+.sfx:hover { color: var(--gold); opacity: 1; }
+.light .sfx { color: var(--grey); }
+.light .sfx:hover { color: var(--gold-deep); }
+
+/* Achievement pop-up */
+#ach {
+  position: fixed; z-index: 58; left: 50%; top: calc(env(safe-area-inset-top, 0px) + 74px);
+  width: min(420px, calc(100% - 32px)); transform: translateX(-50%);
+  background: var(--ink); color: #fff; padding: 14px 16px 16px; display: grid; gap: 10px;
+  box-shadow: 0 -4px 0 var(--gold), 0 4px 0 var(--gold), -4px 0 0 var(--gold), 4px 0 0 var(--gold), 6px 10px 0 4px rgba(13,13,14,.2);
+  animation: achIn .5s cubic-bezier(.3,1.5,.5,1);
+}
+#ach.out { animation: achOut .35s ease-in forwards; }
+#ach .t { display: flex; justify-content: space-between; font-family: var(--display); font-size: 9px; letter-spacing: .12em; color: var(--gold); }
+#ach p { margin: 0; font-size: 17px; }
+#ach .quest { color: #cfcbc2; }
+#ach .m-bar { flex: 1; width: auto; }
+@keyframes achIn { from { transform: translate(-50%, -40px) scale(.8); opacity: 0; } }
+@keyframes achOut { to { transform: translate(-50%, -30px); opacity: 0; } }
+.confetti { position: fixed; top: -12px; z-index: 59; width: 8px; height: 8px; pointer-events: none; animation: fall var(--dur) cubic-bezier(.3,.1,.6,1) forwards; }
+@keyframes fall { to { transform: translate(var(--dx), 105vh) rotate(var(--rot)); } }
+
+/* Golden drops hidden on the desk */
+.drop { position: absolute; z-index: 5; width: 28px; height: 36px; pointer-events: none; animation: float 1.4s ease-in-out infinite; }
+.drop svg { width: 100%; height: 100%; display: block; filter: drop-shadow(2px 2px 0 var(--ink)); }
+.drop::after { content: ""; position: absolute; left: 4px; right: 4px; bottom: -10px; height: 4px; background: rgba(13,13,14,.12); }
+.drop.got { animation: got .5s ease-out forwards; }
+@keyframes float { 50% { transform: translateY(-6px); } }
+@keyframes got { to { transform: translateY(-40px) scale(1.4); opacity: 0; } }
 #section { display: flex; flex-direction: column; }
 .room {
   flex: 1; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 24px 40px;
@@ -333,7 +377,9 @@ li.todo::before { display: none; }
     padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-shadow: none; }
 }
 @media (max-width: 760px) {
-  .clock, .quest > span:first-child { display: none; }
+  .clock, .m-rank, .m-drops { display: none; }
+  .m-bar { width: 72px; }
+  .room-head { padding-left: 16px; padding-top: 64px; }
   .room-head .path { display: none; }
 }
 @media (max-width: 560px) {
@@ -346,7 +392,8 @@ li.todo::before { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .cover, .folder svg, #boot, #hero.jumping { transition: none; }
-  #hero .fig, .soc-hero img, .wavy span, #navList .pill, .detail { animation: none !important; }
+  #hero .fig, .soc-hero img, .wavy span, #navList .pill, .detail, .drop, #ach { animation: none !important; }
+  .confetti { display: none; }
   .dust, .spark { display: none; }
 }
 </style>
@@ -378,7 +425,7 @@ li.todo::before { display: none; }
 <div id="desktop" class="view dotgrid" hidden>
   <header class="topbar">
     <div class="brand"><b>■</b> KARTHIK OS <span style="color:#a9a59c">v26</span></div>
-    <div class="right"><div class="quest"></div><div class="clock" id="clock"></div></div>
+    <div class="right"><div class="quest"></div><button class="sfx" type="button"></button><div class="clock" id="clock"></div></div>
   </header>
   <main class="desk-main" id="desk">
     <div class="hello">
@@ -403,7 +450,7 @@ li.todo::before { display: none; }
 
 <!-- Folder room -->
 <div id="section" class="view dotgrid" hidden>
-  <div class="room-head light"><span class="path">C:\KARTHIK\<b id="secPath"></b></span><div class="quest"></div></div>
+  <div class="room-head light"><button class="px-btn back-btn" type="button" data-back>&lt; Back to desk</button><span class="path">C:\KARTHIK\<b id="secPath"></b></span><div class="quest"></div><button class="sfx" type="button"></button></div>
   <div class="room">
     <div class="room-left">
       <div id="secWavy"></div>
@@ -442,7 +489,7 @@ li.todo::before { display: none; }
 
 <!-- Contact room -->
 <div id="contact" class="view dotgrid" hidden>
-  <div class="room-head light"><span class="path">C:\KARTHIK\<b>CONTACT</b></span><div class="quest"></div></div>
+  <div class="room-head light"><button class="px-btn back-btn" type="button" data-back>&lt; Back to desk</button><span class="path">C:\KARTHIK\<b>CONTACT</b></span><div class="quest"></div><button class="sfx" type="button"></button></div>
   <div class="contact-room">
     <div class="contact-inner" id="contactInner"></div>
   </div>
@@ -739,22 +786,134 @@ function contactLine(withResume) {
 let opened = new Set();
 try { opened = new Set(JSON.parse(localStorage.getItem("karthikos-opened") || "[]")); } catch {}
 let achievementDue = false;
+// Each folder opened moves the meter a third of the way; the rank reads like a shopping trip
+const RANKS = ["Just browsing", "Added to cart", "At checkout", "Sold! Let's talk"];
+const pctDone = () => Math.round((opened.size / FOLDERS.length) * 100);
+const DROP_ICON = `<svg viewBox="0 0 7 9" shape-rendering="crispEdges" aria-hidden="true"><path fill="#c5a052" d="M3 0h1v1h1v2h1v2h1v2h-1v1h-1v1H2v-1H1v-1H0V5h1V3h1V1h1z"/><path fill="#fbfaf7" d="M2 4h1v2H2z"/><path fill="#8f7032" d="M6 5h1v2H6zM5 7h1v1H5zM2 8h3v1H2z"/></svg>`;
+let meterShown = 0;
+function meterHTML(p) {
+  return `<span class="m-rank">${RANKS[Math.round(p / (100 / FOLDERS.length))]}</span>` +
+    `<span class="m-bar" role="progressbar" aria-label="CV completion" aria-valuenow="${p}" aria-valuemin="0" aria-valuemax="100"><i style="--p:${meterShown}%"></i>` +
+    FOLDERS.slice(1).map((_, k) => `<b style="left:${((k + 1) * 100) / FOLDERS.length}%"></b>`).join("") + `</span>` +
+    `<span class="m-pct">${p}%</span>` +
+    `<span class="m-drops" title="Golden drops found">${DROP_ICON}${dropsGot.size}/${DROPS.length}</span>`;
+}
 function updateQuest() {
-  $$(".quest").forEach((q) => {
-    q.innerHTML = `<span>Files</span><span>${FOLDERS.map((f, i) => `<i class="${opened.has(i) ? "on" : ""}"></i>`).join(" ")}</span><span>${opened.size}/${FOLDERS.length}</span>`;
-    q.title = "Folders opened";
-  });
+  const p = pctDone();
+  $$(".quest").forEach((q) => { q.innerHTML = meterHTML(p); });
+  // Fill from the old value to the new one so the jump is visible
+  requestAnimationFrame(() => requestAnimationFrame(() => $$(".m-bar i").forEach((i) => i.style.setProperty("--p", p + "%"))));
+  meterShown = p;
   [...$("#folders").children].forEach((b, i) => {
     b.querySelector(".stamp")?.remove();
     if (opened.has(i)) b.append(el("span", "stamp", "Opened"));
   });
 }
 function markOpened(i) {
-  if (opened.has(i)) return;
+  if (opened.has(i)) return false;
+  const before = meterShown;
   opened.add(i);
   try { localStorage.setItem("karthikos-opened", JSON.stringify([...opened])); } catch {}
-  updateQuest();
   if (opened.size === FOLDERS.length) achievementDue = true;
+  meterShown = before;
+  setTimeout(() => popAchievement(i, before), 450);
+  return true;
+}
+function popAchievement(i, before) {
+  $("#ach")?.remove();
+  const p = pctDone(), done = p === 100;
+  const a = el("div"); a.id = "ach"; a.setAttribute("role", "status");
+  a.innerHTML = `<span class="t"><span>${done ? "Profile complete" : "Achievement unlocked"}</span><span>+${Math.round(100 / FOLDERS.length)}%</span></span>
+    <p><b>${FOLDERS[i].name}</b> opened. ${done ? "You've seen every folder." : `${FOLDERS.length - opened.size} to go.`}</p>`;
+  const q = el("div", "quest"); q.innerHTML = meterHTML(p); a.append(q);
+  document.body.append(a);
+  meterShown = before;
+  updateQuest();
+  sfx(done ? "fanfare" : "ach");
+  if (done) confetti();
+  setTimeout(() => { a.classList.add("out"); setTimeout(() => a.remove(), 400); }, done ? 4200 : 3000);
+}
+function confetti() {
+  if (reduceMotion) return;
+  const colors = ["#c5a052", "#0d0d0e", "#fbfaf7", "#8f7032"];
+  for (let k = 0; k < 60; k++) {
+    const c = el("div", "confetti");
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.background = colors[k % colors.length];
+    c.style.setProperty("--dx", (Math.random() * 160 - 80).toFixed(0) + "px");
+    c.style.setProperty("--rot", (Math.random() * 720 - 360).toFixed(0) + "deg");
+    c.style.setProperty("--dur", (1.6 + Math.random() * 1.4).toFixed(2) + "s");
+    c.style.animationDelay = (Math.random() * 0.5).toFixed(2) + "s";
+    document.body.append(c);
+    setTimeout(() => c.remove(), 3600);
+  }
+}
+
+/* ----- 8-bit sound effects (off until the visitor turns them on) ----- */
+let sfxOn = false, audio = null;
+try { sfxOn = localStorage.getItem("karthikos-sfx") === "1"; } catch {}
+const TUNES = {
+  jump: [[392, 0, .05], [587, .05, .08]], open: [[523, 0], [659, .07], [784, .14]], flip: [[880, 0, .035]],
+  back: [[659, 0], [440, .08]], coin: [[988, 0, .07], [1319, .07, .2]],
+  ach: [[523, 0], [659, .09], [784, .18], [1047, .27, .22]],
+  fanfare: [[523, 0], [523, .1], [523, .2], [659, .3, .14], [784, .46], [659, .56], [1047, .66, .4]],
+};
+function sfx(name) {
+  if (!sfxOn) return;
+  try {
+    audio ||= new (window.AudioContext || window.webkitAudioContext)();
+    const t = audio.currentTime;
+    TUNES[name].forEach(([f, d, len = .08]) => {
+      const o = audio.createOscillator(), g = audio.createGain();
+      o.type = "square"; o.frequency.value = f;
+      g.gain.setValueAtTime(0.045, t + d); g.gain.exponentialRampToValueAtTime(0.0001, t + d + len);
+      o.connect(g).connect(audio.destination); o.start(t + d); o.stop(t + d + len + .02);
+    });
+  } catch {}
+}
+function syncSfx() { $$(".sfx").forEach((b) => { b.textContent = sfxOn ? "Sound: on" : "Sound: off"; b.setAttribute("aria-pressed", String(sfxOn)); }); }
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".sfx")) return;
+  sfxOn = !sfxOn;
+  try { localStorage.setItem("karthikos-sfx", sfxOn ? "1" : "0"); } catch {}
+  syncSfx(); sfx("coin");
+});
+document.addEventListener("click", (e) => { if (e.target.closest("[data-back]")) navigate("home"); });
+
+/* ----- golden drops: three collectibles hidden on the desk, each hides a fun fact ----- */
+const DROPS = [
+  { fact: "I was manufactured in Thiruvananthapuram, Kerala." },
+  { fact: "At MICA I organised an Onam Sadhya for 400+ people." },
+  { fact: "I've woken up at 5 a.m. for a Rajinikanth first-day-first-show. Worth it." },
+];
+let dropsGot = new Set();
+try { dropsGot = new Set(JSON.parse(localStorage.getItem("karthikos-drops") || "[]")); } catch {}
+function placeDrops() {
+  $$(".drop").forEach((d) => d.remove());
+  const W = desk.clientWidth, ps = $(".play-space"), f = $("#folders");
+  const psY = ps.offsetTop + ps.offsetHeight * 0.55;
+  const spots = [[W * 0.12, psY], [W * 0.88, psY], W >= 900 ? [W * 0.1, f.offsetTop + f.offsetHeight * 0.55] : [W * 0.5, ps.offsetTop + 14]];
+  DROPS.forEach((d, i) => {
+    [d.x, d.y] = spots[i];
+    if (dropsGot.has(i)) return;
+    const n = el("div", "drop"); n.innerHTML = DROP_ICON;
+    n.style.left = d.x - 14 + "px"; n.style.top = d.y - 36 + "px";
+    n.style.animationDelay = i * -0.45 + "s";
+    d.node = n; desk.append(n);
+  });
+}
+function checkDrops() {
+  DROPS.forEach((d, i) => {
+    if (dropsGot.has(i) || !d.node || Math.hypot(H.x - d.x, H.y - d.y) > 38) return;
+    dropsGot.add(i);
+    try { localStorage.setItem("karthikos-drops", JSON.stringify([...dropsGot])); } catch {}
+    d.node.classList.add("got"); const n = d.node; d.node = null; setTimeout(() => n.remove(), 520);
+    burst(d.x, d.y - 20, 12); sfx("coin");
+    meterShown = pctDone(); updateQuest();
+    const all = dropsGot.size === DROPS.length;
+    say(`<b>Golden drop ${dropsGot.size}/${DROPS.length}</b><br>${d.fact}${all ? "<br><b>All drops found!</b> You're thorough. I like that." : ""}`, 6000);
+    H.lastInput = performance.now() + 2000;
+  });
 }
 function showAchievement() {
   $("#toast")?.remove();
@@ -831,7 +990,8 @@ function showView(dest, from = -1) {
   $("#contact").hidden = dest !== "contact";
   const fi = FOLDERS.findIndex((f) => f.id === dest);
   view = fi >= 0 ? "folder" : dest;
-  if (fi >= 0) { renderSection(fi); markOpened(fi); }
+  if (fi >= 0) { renderSection(fi); markOpened(fi); sfx("open"); }
+  if (dest === "contact") sfx("open");
   if (dest === "home") { H.running ? returnHero(from) : startHero(); }
   try { history.replaceState(null, "", dest === "home" ? location.pathname : "#" + dest); } catch {}
   scrollTo(0, 0);
@@ -873,8 +1033,8 @@ function buildDesktop() {
     holder.append(b);
   });
   $("#how").innerHTML = TOUCH
-    ? "<span>Drag or tap to walk</span><span>Tap a folder to enter</span>"
-    : "<span>Move <kbd>Mouse</kbd> or <kbd>Arrows</kbd> <kbd>WASD</kbd></span><span>Enter <kbd>Click</kbd> or <kbd>Enter</kbd></span>";
+    ? "<span>Drag or tap to walk</span><span>Tap a folder to enter</span><span>Find 3 golden drops</span>"
+    : "<span>Move <kbd>Mouse</kbd> or <kbd>Arrows</kbd> <kbd>WASD</kbd></span><span>Enter <kbd>Click</kbd> or <kbd>Enter</kbd></span><span>Find 3 golden drops</span>";
   $("#deskContact").replaceWith(contactLine(true));
   const clock = $("#clock");
   const t = () => { clock.textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }); };
@@ -887,11 +1047,12 @@ const desk = $("#desk"), hero = $("#hero"), heroImg = $("#heroImg"), bubble = $(
 const H = { x: 0, y: 0, tx: null, ty: null, stopAt: 4, keys: new Set(), dash: null, left: false,
   frame: 0, lastFrame: 0, lastDust: 0, lastInput: 0, near: -1, idleLine: 0, running: false, busy: false, t: 0 };
 const IDLE_LINES = [
-  "Fun fact: I was manufactured in Thiruvananthapuram.",
+  "Every folder you open fills the meter up top.",
   "Yes, the shirts really are that bright.",
   "Tip: the arrow keys and WASD work too.",
   "What if it all works out?",
   "Not sure where to start? Try <b>Player Profile</b>.",
+  "Psst. There are <b>golden drops</b> hidden on this desk.",
 ];
 let sayTimer = 0;
 function say(html, ms) {
@@ -997,6 +1158,7 @@ function step(now) {
       if (H.x > z.l && H.x < z.r && H.y > z.t && H.y < z.b) { near = i; break; }
     }
     setNear(near);
+    checkDrops();
     if (!moving && near === -1 && now - H.lastInput > 7000) {
       H.lastInput = now;
       say(opened.size === FOLDERS.length ? "You've seen it all. <b>Let's talk?</b>" : IDLE_LINES[H.idleLine++ % IDLE_LINES.length], 4500);
@@ -1008,6 +1170,7 @@ function step(now) {
 
 function startHero() {
   heroImg.src = STAND;
+  placeDrops();
   const ps = $(".play-space");
   H.x = desk.clientWidth / 2;
   H.y = ps.offsetTop + ps.offsetHeight - 16;
@@ -1019,6 +1182,8 @@ function startHero() {
 }
 function returnHero(from) {
   H.busy = false; H.tx = null; H.dash = null; H.keys.clear(); H.near = -2;
+  sfx("back");
+  requestAnimationFrame(placeDrops);
   hero.classList.remove("jumping"); hero.classList.add("idle");
   heroImg.src = STAND;
   requestAnimationFrame(() => {
@@ -1039,6 +1204,7 @@ function approach(i) {
   const g = folderGeom(i);
   H.keys.clear();
   const jumpOn = () => {
+    sfx("jump");
     H.busy = true;
     const top = folderGeom(i).top;
     H.left = top.x < H.x;
@@ -1078,7 +1244,7 @@ desk.addEventListener("pointerdown", (e) => {
 addEventListener("pointerup", () => (dragging = false));
 addEventListener("pointercancel", () => (dragging = false));
 desk.addEventListener("touchmove", (e) => { if (dragging) e.preventDefault(); }, { passive: false });
-addEventListener("resize", () => { if (!$("#desktop").hidden) { clampHero(); renderHero(); } });
+addEventListener("resize", () => { if (!$("#desktop").hidden) { clampHero(); renderHero(); placeDrops(); } });
 
 /* =====================================================================
    Folder room: vertical card stack + opened card
@@ -1224,6 +1390,7 @@ function goCard(n) {
   const dir = n > S.active ? 1 : -1;
   S.active = n;
   stackLayout();
+  sfx("flip");
   if (S.detail) renderDetail(dir);
 }
 const stepStack = (dir) => goCard(S.active + dir);
@@ -1295,6 +1462,7 @@ function renderDetail(dir = 0) {
 
 function openDetail() {
   if (S.detail) return;
+  sfx("open");
   const front = stack.querySelector(".cover.front");
   const from = front?.getBoundingClientRect();
   S.detail = true;
@@ -1407,6 +1575,7 @@ document.addEventListener("keydown", (e) => {
    ===================================================================== */
 buildDesktop();
 buildContact();
+syncSfx();
 const startAt = DESTS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "home";
 loader({
   title: "Player 1",
