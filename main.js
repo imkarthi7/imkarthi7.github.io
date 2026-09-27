@@ -331,6 +331,16 @@
     if (sec.media) panel.appendChild(panelPhoto(sec.media));
     panel.appendChild(fill(el("p", "panel__part"), sec.part));
     var title = fill(el("h3", "panel__title"), sec.title);
+    if (sec.logo && !isTodo(sec.title)) {
+      title.textContent = "";
+      title.classList.add("panel__title--logo");
+      var logo = document.createElement("img");
+      logo.src = sec.logo.src;
+      logo.width = sec.logo.width;
+      logo.height = sec.logo.height;
+      logo.alt = sec.title;
+      title.appendChild(logo);
+    }
     title.tabIndex = -1;
     panel.appendChild(title);
 

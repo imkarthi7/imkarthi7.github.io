@@ -117,19 +117,12 @@ window.CONTENT = {
       part: "Dropper bulb",
       pin: { x: 42, y: 10, side: "left" },
       hotspot: { x: 35, y: 3, w: 30, h: 16.5 },
-      title: "TODO: About me headline",
+      title: "Karthik",
       paragraphs: [
         "Ask my batchmates about me and you'll probably hear about the bright shirts, the even brighter phone cases, and a laugh that reaches you before I do. I won't argue.",
         "My parents always trusted me to make my own choices, so I made them: Electrical Engineering, leaving a stable job for an MBA, moving from Kerala to Ahmedabad, and chasing an off-campus FMCG sales internship because I wanted to work close to consumers.",
         "MICA was the first time I left home. I knew very little Hindi and had no idea how I'd fit in. So I started talking. From organising an Onam Sadhya for 400+ people to waking up at 5 a.m. for a Rajinikanth first-day-first-show, MICA let me be fully myself. Somewhere along the way, I found sales: people, problem-solving and the thrill of figuring things out.",
         "There's a line of graffiti at MICA that stayed with me: \"What if it all works out?\" That's how I approach things. I make the choice and give it 100%. What I can't control, I don't worry about.",
-      ],
-      list: [
-        "EEE engineer",
-        "TCS",
-        "Synnefx Health Technologies",
-        "MBA, MICA Ahmedabad (2024–26)",
-        "Brand Manager at RSPL",
       ],
     },
     {
@@ -164,6 +157,9 @@ window.CONTENT = {
       pin: { x: 67, y: 77.6, side: "right" },
       hotspot: { x: 34, y: 71, w: 32, h: 13.5 },
       title: "L'Oréal Paris",
+      // Optional logo shown in place of the title text (the title becomes its
+      // description for screen readers). Made from assets/LOreal-Emblem.png.
+      logo: { src: "assets/brand/loreal-paris-logo.png", width: 720, height: 192 },
       // Optional photo at the top of the panel (made with tools/prep-gallery.py).
       media: {
         src: "assets/gallery/loreal-products.webp",

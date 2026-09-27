@@ -22,3 +22,6 @@ assets/IMG_*
 # Original photos for the collage (full size, with location metadata):
 # only the stripped copies in assets/gallery/ are published
 assets/photos/
+
+# Full-size source of the brand logo (the site uses assets/brand/loreal-paris-logo.png)
+assets/LOreal-Emblem.png
