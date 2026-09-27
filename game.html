@@ -183,8 +183,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
   flex: 1; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 24px 40px;
   align-items: center; padding: 8px clamp(16px, 4vw, 56px) 28px;
 }
-.room-left { display: grid; gap: 20px; align-content: center; }
-.wavy { font-family: var(--display); font-weight: 400; margin: 0; line-height: 1.25; font-size: clamp(30px, 4.6vw, 72px); color: var(--ink); }
+.room-left { display: grid; gap: 16px; align-content: center; min-width: 0; }
+.wavy { font-family: var(--display); font-weight: 400; margin: 0; line-height: 1.25; font-size: clamp(28px, 4vw, 62px); color: var(--ink); }
 .wavy .w { display: inline-block; white-space: nowrap; }
 .wavy span { display: inline-block; text-shadow: 4px 4px 0 var(--gold); animation: wave 2.6s ease-in-out infinite; animation-delay: calc(var(--i) * -0.16s); }
 .wavy.sub { font-size: clamp(15px, 2.2vw, 26px); color: var(--gold-deep); }
@@ -192,10 +192,31 @@ button { font: inherit; color: inherit; cursor: pointer; }
 @keyframes wave { 0%, 100% { transform: translateY(-5px) rotate(-4deg); } 50% { transform: translateY(5px) rotate(4deg); } }
 .room-left .desc { margin: 0; font-family: var(--read); font-size: 18px; line-height: 1.55; color: var(--ink-2); max-width: 40ch; }
 .room-right { display: grid; justify-items: center; gap: 16px; min-width: 0; }
-.now { text-align: center; display: grid; gap: 6px; }
+
+/* Card list: jump to any card in one click */
+.toc-wrap { position: relative; padding-left: 50px; display: grid; gap: 8px; margin-top: 4px; }
+.toc-head { display: flex; justify-content: space-between; gap: 10px; font-family: var(--display); font-size: 8px; letter-spacing: .12em; text-transform: uppercase; color: var(--grey); padding: 0 10px; }
+.toc { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.toc button {
+  width: 100%; display: grid; grid-template-columns: 30px 1fr auto; align-items: center; gap: 10px;
+  text-align: left; border: 0; background: transparent; padding: 8px 10px;
+  transition: background .15s, transform .2s cubic-bezier(.3,1.4,.5,1), box-shadow .15s;
+}
+.toc button:hover { background: var(--card); transform: translateX(4px); }
+.toc .n { font-family: var(--display); font-size: 10px; color: var(--grey); }
+.toc .t { display: grid; gap: 3px; min-width: 0; }
+.toc .t small { font-family: var(--display); font-size: 7px; letter-spacing: .1em; color: var(--gold-deep); text-transform: uppercase; }
+.toc .t span { font-family: var(--read); font-weight: 700; font-size: 16px; line-height: 1.2; }
+.toc .mark { font-family: var(--display); font-size: 7px; letter-spacing: .06em; text-transform: uppercase; color: var(--grey); }
+.toc .mark.read { color: var(--gold-deep); }
+.toc button[aria-current="true"] { background: var(--ink); color: #fff; transform: translateX(8px); box-shadow: 4px 4px 0 var(--gold); }
+.toc button[aria-current="true"] .n, .toc button[aria-current="true"] .mark { color: var(--gold); }
+.toc button[aria-current="true"] .t small { color: #cfcbc2; }
+#tocHero { position: absolute; left: 0; top: 0; width: 40px; height: 64px; transition: transform .38s cubic-bezier(.3,1.2,.5,1); pointer-events: none; }
+.now { text-align: center; display: grid; gap: 6px; position: relative; z-index: 120; }
 .now h2 { font-family: var(--display); font-weight: 400; font-size: clamp(13px, 1.8vw, 18px); line-height: 1.5; margin: 0; text-wrap: balance; }
 
-.stack { position: relative; width: min(540px, 100%); aspect-ratio: 16 / 13.6; perspective: 1400px; perspective-origin: 50% -40%; touch-action: none; user-select: none; }
+.stack { position: relative; margin-top: 40px; width: min(540px, 100%, calc((100vh - 350px) * 1.176)); aspect-ratio: 16 / 13.6; perspective: 1400px; perspective-origin: 50% -40%; touch-action: none; user-select: none; }
 .cover {
   position: absolute; left: 0; right: 0; bottom: 0; aspect-ratio: 16 / 10; padding: 0; border: 0;
   background: var(--ink); color: #fff; text-align: left; overflow: hidden;
@@ -203,6 +224,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
   transition: transform .5s cubic-bezier(.2,.8,.2,1), opacity .4s, filter .4s, rotate .18s ease-out;
   box-shadow: 0 -4px 0 0 var(--ink), 0 4px 0 0 var(--ink), -4px 0 0 0 var(--ink), 4px 0 0 0 var(--ink), 6px 10px 0 0 rgba(13,13,14,.14);
 }
+.cover::before { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,.4) 48%, rgba(197,160,82,.35) 52%, transparent 65%); transform: translateX(-130%); }
+.cover.shine::before { animation: shine .9s ease-out .15s; }
+@keyframes shine { to { transform: translateX(130%); } }
 .cover.front { box-shadow: 0 -4px 0 0 var(--ink), 0 4px 0 0 var(--ink), -4px 0 0 0 var(--ink), 4px 0 0 0 var(--ink), 8px 12px 0 0 var(--gold); }
 .cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; display: block; }
 .cover.gen { background: radial-gradient(circle, rgba(197,160,82,.28) 1.5px, transparent 2px) 0 0 / 12px 12px, var(--ink); }
@@ -210,7 +234,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .cover .c-title { position: absolute; left: 16px; right: 16px; top: 42px; font-family: var(--display); font-size: clamp(12px, 2vw, 17px); line-height: 1.5; }
 .cover .c-num { position: absolute; left: 14px; bottom: 10px; font-family: var(--display); font-size: clamp(34px, 5vw, 56px); color: var(--gold); line-height: 1; }
 .cover.img .c-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.55), transparent 35%, transparent 60%, rgba(0,0,0,.7)); }
-.cover.img .c-title { top: auto; bottom: 14px; left: 90px; }
+.cover.img .c-title { top: auto; bottom: 14px; left: calc(clamp(34px, 5vw, 56px) * 2 + 24px); }
 .cover .c-open { position: absolute; top: 12px; right: 12px; font-family: var(--display); font-size: 8px; background: var(--gold); color: var(--ink); padding: 6px 8px; opacity: 0; transition: opacity .2s; }
 .cover.front .c-open { opacity: 1; }
 .cover .c-todo { position: absolute; right: 14px; bottom: 12px; font-family: var(--display); font-size: 7px; color: var(--gold); border: 2px dashed var(--gold); padding: 4px 6px; }
@@ -253,7 +277,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
 li.todo { display: block !important; }
 li.todo::before { display: none; }
 .detail-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 12px 14px; border-top: 2px dashed var(--line); }
-.detail-foot .count { font-family: var(--display); font-size: 9px; font-variant-numeric: tabular-nums; }
+.detail-foot .count { font-family: var(--display); font-size: 9px; font-variant-numeric: tabular-nums; display: grid; gap: 4px; text-align: center; min-width: 0; }
+.detail-foot .count small { font-family: var(--read); font-size: 12px; color: var(--grey); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 24ch; }
+.detail-foot .count small:not(:empty)::before { content: "Up next: "; }
 
 /* ---------- Contact room ---------- */
 #contact { display: flex; flex-direction: column; }
@@ -290,6 +316,18 @@ li.todo::before { display: none; }
   .room { grid-template-columns: 1fr; align-items: start; gap: 18px; }
   .room-left { text-align: center; justify-items: center; gap: 12px; }
   .room-left .desc { font-size: 16px; }
+  .toc-wrap { padding-left: 0; width: 100%; }
+  .toc-head { justify-content: center; }
+  #tocHero { display: none; }
+  .toc { grid-auto-flow: column; grid-auto-columns: max-content; overflow-x: auto; scroll-snap-type: x proximity; padding: 4px 4px 10px; scrollbar-width: none; }
+  .toc::-webkit-scrollbar { display: none; }
+  .toc li { scroll-snap-align: center; }
+  .toc button { grid-template-columns: auto auto; background: var(--card); box-shadow: 0 0 0 2px var(--ink); }
+  .toc button[aria-current="true"] { transform: none; box-shadow: 0 0 0 2px var(--ink), 3px 3px 0 2px var(--gold); }
+  .toc .t small, .toc .mark { display: none; }
+  .toc .t span { font-size: 14px; white-space: nowrap; }
+  .stack { width: min(540px, 100%); }
+  .stack-ctl .dots { display: none; }
   .wavy { font-size: clamp(30px, 9vw, 52px); }
   .detail { position: fixed; inset: 0; z-index: 55; width: auto; max-height: none;
     padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-shadow: none; }
@@ -371,6 +409,11 @@ li.todo::before { display: none; }
       <div id="secWavy"></div>
       <p class="eyebrow" id="secEyebrow"></p>
       <p class="desc" id="secDesc"></p>
+      <div class="toc-wrap">
+        <div class="toc-head"><span>Cards in this folder</span><span id="tocCount"></span></div>
+        <img id="tocHero" class="pixel" alt="" aria-hidden="true">
+        <ol class="toc" id="toc" aria-label="Cards in this folder"></ol>
+      </div>
     </div>
     <div class="room-right">
       <div id="stackWrap" style="display:grid;gap:16px;justify-items:center;width:100%">
@@ -389,7 +432,7 @@ li.todo::before { display: none; }
         <div class="detail-body" id="detailBody"></div>
         <div class="detail-foot">
           <button class="px-btn" id="dPrev">&lt; Prev</button>
-          <span class="count" id="dCount"></span>
+          <span class="count"><span id="dCount"></span><small id="dNextTitle"></small></span>
           <button class="px-btn dark" id="dNext">Next &gt;</button>
         </div>
       </div>
@@ -1040,8 +1083,14 @@ addEventListener("resize", () => { if (!$("#desktop").hidden) { clampHero(); ren
 /* =====================================================================
    Folder room: vertical card stack + opened card
    ===================================================================== */
-const S = { fi: 0, active: 0, detail: false };
-const stack = $("#stack");
+const S = { fi: 0, active: 0, detail: false, lastFront: -1 };
+const stack = $("#stack"), toc = $("#toc"), tocHero = $("#tocHero");
+const readMap = FOLDERS.map(() => new Set());
+const SMALL = [sprite(TOP.concat(LEGS_STRIDE), 2), sprite(TOP.concat(LEGS_PASS), 2)];
+const EASE = "cubic-bezier(.2,.8,.2,1)";
+const anim = (node, frames, opts) => (reduceMotion || !node.animate ? null : node.animate(frames, { easing: EASE, fill: "backwards", ...opts }));
+const hasDraft = (card) => [...(card.body || []), ...(card.list || [])].some(isTodo);
+
 function coverEl(card, n, total) {
   const b = el("button", "cover");
   b.type = "button";
@@ -1052,34 +1101,61 @@ function coverEl(card, n, total) {
   } else b.classList.add("gen");
   b.append(el("span", "c-tag", card.tag), el("span", "c-title", card.title), el("span", "c-num", pad(n + 1)));
   b.append(el("span", "c-open", TOUCH ? "Tap to open" : "Click to open"));
-  const texts = [...(card.body || []), ...(card.list || [])];
-  if (texts.some(isTodo)) b.append(el("span", "c-todo", "Draft"));
+  if (hasDraft(card)) b.append(el("span", "c-todo", "Draft"));
   b.setAttribute("aria-label", `Card ${n + 1} of ${total}: ${card.title}`);
   b.addEventListener("click", () => {
     if (dragMoved) return;
-    if (n === S.active) openDetail(); else { S.active = n; stackLayout(); }
+    if (n === S.active) openDetail(); else goCard(n);
   });
   return b;
 }
+
 function renderSection(fi) {
   const f = FOLDERS[fi];
-  S.fi = fi; S.active = 0;
+  S.fi = fi; S.active = 0; S.lastFront = -1;
   $("#secWavy").replaceChildren(wavy("KARTHIK"), wavy(f.name.toUpperCase(), "sub"));
   $("#secEyebrow").textContent = f.eyebrow;
   $("#secDesc").textContent = f.intro;
   $("#secPath").textContent = f.name.toUpperCase().replace(/\s+/g, "_");
-  stack.innerHTML = ""; $("#dots").innerHTML = "";
+  stack.innerHTML = ""; $("#dots").innerHTML = ""; toc.innerHTML = "";
   f.cards.forEach((c, n) => {
     stack.append(coverEl(c, n, f.cards.length));
     const d = el("button");
     d.type = "button"; d.setAttribute("aria-label", `Card ${n + 1}: ${c.title}`);
-    d.addEventListener("click", () => { S.active = n; stackLayout(); });
+    d.addEventListener("click", () => goCard(n));
     $("#dots").append(d);
+    // Card list: one click jumps straight to any card
+    const li = el("li"), b = el("button");
+    b.type = "button";
+    const t = el("span", "t"); t.append(el("small", null, c.tag), el("span", null, c.title));
+    b.append(el("span", "n", pad(n + 1)), t, el("span", "mark"));
+    b.addEventListener("click", () => { if (n === S.active && !S.detail) openDetail(); else goCard(n); });
+    li.append(b); toc.append(li);
   });
-  $("#stackHint").textContent = TOUCH ? "Swipe up or down to flip. Tap the front card to open it." : "Scroll or use the arrow keys to flip. Click the front card to open it.";
+  tocHero.src = SMALL[1];
+  $("#stackHint").textContent = TOUCH
+    ? "Swipe the stack or tap a card in the list. Tap the front card to open it."
+    : "Scroll anywhere, use the arrow keys, or pick from the list. Click the front card to open it.";
   closeDetail(true);
+  updateToc();
+  // Entrance: the left column rises in, then the cards are dealt onto the stack
+  if (!reduceMotion) {
+    [...$(".room-left").children].forEach((node, i) => anim(node, [{ opacity: 0, transform: "translateY(24px)" }, { opacity: 1, transform: "none" }], { duration: 520, delay: 80 + i * 90 }));
+    [...toc.children].forEach((li, i) => anim(li, [{ opacity: 0, transform: "translateX(-24px)" }, { opacity: 1, transform: "none" }], { duration: 420, delay: 380 + i * 60 }));
+    anim($(".now"), [{ opacity: 0, transform: "translateY(-12px)" }, { opacity: 1, transform: "none" }], { duration: 420, delay: 300 });
+    anim($(".stack-ctl"), [{ opacity: 0 }, { opacity: 1 }], { duration: 400, delay: 700 });
+    const covers = [...stack.children];
+    covers.forEach((c) => { c.style.transition = "none"; c.style.transform = "translateY(130%) rotateX(-30deg)"; c.style.opacity = 0; });
+    stack.offsetWidth;
+    covers.forEach((c, n) => {
+      c.style.transition = "";
+      c.style.transitionDelay = `${180 + (covers.length - 1 - n) * 90}ms`;
+      setTimeout(() => (c.style.transitionDelay = ""), 1400);
+    });
+  }
   stackLayout();
 }
+
 function stackLayout() {
   const cards = [...stack.children], f = FOLDERS[S.fi];
   const narrow = innerWidth < 900;
@@ -1087,7 +1163,7 @@ function stackLayout() {
   cards.forEach((c, n) => {
     const d = n - S.active;
     if (d < 0) {
-      c.style.transform = `translateY(70%) translateZ(60px) rotateX(-14deg)`;
+      c.style.transform = `translateY(115%) translateZ(80px) rotateX(-28deg)`;
       c.style.opacity = 0;
     } else {
       c.style.transform = `translateY(${-d * stepY}px) translateZ(${-d * stepZ}px)`;
@@ -1100,25 +1176,69 @@ function stackLayout() {
     if (d !== 0) c.style.rotate = "";
     c.tabIndex = d === 0 ? 0 : -1;
   });
+  // A light sweep across the card that just came to the front
+  if (S.lastFront !== S.active && S.lastFront !== -1 && !reduceMotion) {
+    const c = cards[S.active];
+    c.classList.remove("shine"); c.offsetWidth; c.classList.add("shine");
+  }
+  S.lastFront = S.active;
   [...$("#dots").children].forEach((d, n) => d.setAttribute("aria-current", n === S.active ? "true" : "false"));
   const card = f.cards[S.active];
   $("#nowTag").textContent = `${pad(S.active + 1)}/${pad(f.cards.length)} · ${card.tag}`;
   $("#nowTitle").textContent = card.title;
+  anim($("#nowTitle"), [{ opacity: 0, transform: "translateY(8px)" }, { opacity: 1, transform: "none" }], { duration: 300 });
   $("#prev").disabled = S.active === 0;
   $("#next").disabled = S.active === f.cards.length - 1;
+  updateToc();
 }
-function stepStack(dir) { S.active = Math.max(0, Math.min(FOLDERS[S.fi].cards.length - 1, S.active + dir)); stackLayout(); }
+
+// The list tracks where you are; the little Karthik walks to the current card
+let tocWalk = 0;
+function updateToc() {
+  const f = FOLDERS[S.fi], items = [...toc.querySelectorAll("button")];
+  items.forEach((b, n) => {
+    b.setAttribute("aria-current", n === S.active ? "true" : "false");
+    const mark = b.querySelector(".mark");
+    mark.textContent = readMap[S.fi].has(n) ? "Read" : hasDraft(f.cards[n]) ? "Draft" : "";
+    mark.classList.toggle("read", readMap[S.fi].has(n));
+  });
+  $("#tocCount").textContent = `${readMap[S.fi].size}/${f.cards.length} read`;
+  const cur = items[S.active];
+  if (!cur) return;
+  if (narrowLayout()) { cur.scrollIntoView({ block: "nearest", inline: "center", behavior: reduceMotion ? "auto" : "smooth" }); return; }
+  const y = cur.parentElement.offsetTop + cur.offsetHeight / 2 - 32;
+  const from = tocHero._y ?? y;
+  tocHero._y = y;
+  tocHero.style.transform = `translateY(${y}px)`;
+  if (reduceMotion || from === y) return;
+  clearInterval(tocWalk);
+  let k = 0;
+  tocWalk = setInterval(() => { tocHero.src = SMALL[k++ % 2]; if (k > 5) { clearInterval(tocWalk); tocHero.src = SMALL[1]; } }, 70);
+}
+const narrowLayout = () => innerWidth < 900;
+
+function goCard(n) {
+  const total = FOLDERS[S.fi].cards.length;
+  n = Math.max(0, Math.min(total - 1, n));
+  if (n === S.active) return;
+  const dir = n > S.active ? 1 : -1;
+  S.active = n;
+  stackLayout();
+  if (S.detail) renderDetail(dir);
+}
+const stepStack = (dir) => goCard(S.active + dir);
 $("#prev").addEventListener("click", () => stepStack(-1));
 $("#next").addEventListener("click", () => stepStack(1));
 $("#openBtn").addEventListener("click", () => openDetail());
 
-// Scroll wheel and vertical swipes flip the stack
+// The scroll wheel flips cards anywhere in the room (while no card is open)
 let wheelAcc = 0, wheelAt = 0;
-stack.addEventListener("wheel", (e) => {
+$("#section").addEventListener("wheel", (e) => {
+  if (S.detail || view !== "folder" || e.target.closest("#toc")) return;
   e.preventDefault();
-  wheelAcc += e.deltaY;
+  wheelAcc += Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
   const now = performance.now();
-  if (Math.abs(wheelAcc) > 50 && now - wheelAt > 280) { stepStack(wheelAcc > 0 ? 1 : -1); wheelAcc = 0; wheelAt = now; }
+  if (Math.abs(wheelAcc) > 40 && now - wheelAt > 260) { stepStack(wheelAcc > 0 ? 1 : -1); wheelAcc = 0; wheelAt = now; }
 }, { passive: false });
 let dragY = null, dragMoved = false;
 stack.addEventListener("pointerdown", (e) => { dragY = e.clientY; dragMoved = false; });
@@ -1141,13 +1261,13 @@ stack.addEventListener("pointerup", (e) => {
 });
 stack.addEventListener("pointerleave", () => { const c = stack.querySelector(".cover.front"); if (c) c.style.rotate = ""; });
 
-function renderDetail() {
+function renderDetail(dir = 0) {
   const f = FOLDERS[S.fi], card = f.cards[S.active], total = f.cards.length;
   const body = $("#detailBody");
   body.innerHTML = "";
   $("#detailN").textContent = `${pad(S.active + 1)}/${pad(total)} · ${card.tag}`;
   const h = el("h3", null, card.title); h.id = "detailTitle";
-  if (card.logo) { const l = el("img", "logo"); l.src = card.logo.src; l.alt = card.logo.alt; body.append(l); h.className = "sr"; h.style.cssText = "position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)"; }
+  if (card.logo) { const l = el("img", "logo"); l.src = card.logo.src; l.alt = card.logo.alt; body.append(l); h.style.cssText = "position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)"; }
   body.append(h);
   if (card.image) { const im = el("img", "media" + (card.image.portrait ? " portrait" : "")); im.src = card.image.src; im.alt = card.image.alt; body.append(im); }
   if (card.quote) body.append(el("p", "big-quote", `"${card.quote}"`));
@@ -1163,25 +1283,55 @@ function renderDetail() {
   $("#dCount").textContent = `${S.active + 1}/${total}`;
   $("#dPrev").disabled = S.active === 0;
   $("#dNext").disabled = S.active === total - 1;
+  $("#dNextTitle").textContent = S.active < total - 1 ? f.cards[S.active + 1].title : "";
+  readMap[S.fi].add(S.active);
+  updateToc();
+  // Content slides in from the side you're heading to, one piece after another
+  [...body.children].forEach((node, i) => anim(node, [
+    { opacity: 0, transform: `translate(${dir * 36}px, ${dir ? 0 : 16}px)` },
+    { opacity: 1, transform: "none" },
+  ], { duration: 420, delay: 60 + i * 60 }));
 }
+
 function openDetail() {
+  if (S.detail) return;
+  const front = stack.querySelector(".cover.front");
+  const from = front?.getBoundingClientRect();
   S.detail = true;
-  renderDetail();
   $("#stackWrap").hidden = true;
   const d = $("#detail"); d.hidden = false;
-  d.style.animation = "none"; d.offsetWidth; d.style.animation = "";
+  renderDetail(0);
+  // The card grows out of the stack into the reading panel
+  const to = d.getBoundingClientRect();
+  if (from && to.width) anim(d, [
+    { transformOrigin: "0 0", transform: `translate(${from.left - to.left}px, ${from.top - to.top}px) scale(${from.width / to.width}, ${from.height / to.height})`, opacity: 0.4 },
+    { transformOrigin: "0 0", transform: "none", opacity: 1 },
+  ], { duration: 460 });
   $("#detailBack").focus({ preventScroll: true });
 }
 function closeDetail(silent) {
+  const wasOpen = S.detail;
   S.detail = false;
   $("#detail").hidden = true;
   $("#stackWrap").hidden = false;
-  if (!silent) { stackLayout(); stack.querySelector(".cover.front")?.focus({ preventScroll: true }); }
+  if (silent || !wasOpen) return;
+  stackLayout();
+  const front = stack.querySelector(".cover.front");
+  front?.focus({ preventScroll: true });
+  anim($("#stackWrap"), [{ opacity: 0, transform: "scale(.96)" }, { opacity: 1, transform: "none" }], { duration: 380 });
 }
 $("#detailBack").addEventListener("click", () => closeDetail());
-$("#dPrev").addEventListener("click", () => { stepStack(-1); renderDetail(); });
-$("#dNext").addEventListener("click", () => { stepStack(1); renderDetail(); });
-addEventListener("resize", () => { if (view === "folder") stackLayout(); });
+$("#dPrev").addEventListener("click", () => stepStack(-1));
+$("#dNext").addEventListener("click", () => stepStack(1));
+// Swipe left/right on an open card to move between cards (phones)
+let swipe = null;
+$("#detailBody").addEventListener("pointerdown", (e) => { if (e.pointerType !== "mouse") swipe = { x: e.clientX, y: e.clientY }; });
+$("#detailBody").addEventListener("pointerup", (e) => {
+  if (!swipe) return;
+  const dx = e.clientX - swipe.x, dy = e.clientY - swipe.y; swipe = null;
+  if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) stepStack(dx < 0 ? 1 : -1);
+});
+addEventListener("resize", () => { if (view === "folder") { tocHero._y = null; stackLayout(); } });
 
 /* =====================================================================
    Contact room
@@ -1239,12 +1389,14 @@ document.addEventListener("keydown", (e) => {
   if (view === "folder") {
     const k = e.key;
     if (S.detail) {
-      if (k === "ArrowRight" || k === "ArrowDown") { e.preventDefault(); if (S.active < FOLDERS[S.fi].cards.length - 1) { stepStack(1); renderDetail(); } }
-      if (k === "ArrowLeft" || k === "ArrowUp") { e.preventDefault(); if (S.active > 0) { stepStack(-1); renderDetail(); } }
+      if (k === "ArrowRight") { e.preventDefault(); stepStack(1); }
+      if (k === "ArrowLeft") { e.preventDefault(); stepStack(-1); }
     } else {
       if (k === "ArrowRight" || k === "ArrowDown") { e.preventDefault(); stepStack(1); }
       if (k === "ArrowLeft" || k === "ArrowUp") { e.preventDefault(); stepStack(-1); }
-      if (k === "Enter" && !onControl) { e.preventDefault(); openDetail(); }
+      if ((k === "Enter" || k === " ") && !onControl) { e.preventDefault(); openDetail(); }
+      if (k === "Home") { e.preventDefault(); goCard(0); }
+      if (k === "End") { e.preventDefault(); goCard(FOLDERS[S.fi].cards.length - 1); }
     }
   }
   if (["1", "2", "3"].includes(e.key) && view !== "home") navigate(FOLDERS[+e.key - 1].id);
