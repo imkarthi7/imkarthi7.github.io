@@ -1,9 +1,9 @@
 # Karthik OS
 
-Karthik's creative CV for L'Oréal, played as an 8-bit game. Live at **https://imkarthi7.github.io**.
+Karthik's creative CV, played as an 8-bit game. Live at **https://imkarthi7.github.io**.
 
 The whole site is one file, `game.html`, with no build step. `index.html` only redirects to it (keeping
-any `#room` link, e.g. `/#beauty`).
+any `#room` link, e.g. `/#work`).
 
 ## Files
 
@@ -13,9 +13,7 @@ any `#room` link, e.g. `/#beauty`).
 | `index.html` | Redirect to `game.html` |
 | `assets/img/karthik.webp` | Photo on Folder 01, card 01 |
 | `assets/img/karthik-badge.webp` | Small photo on the Contact page badge |
-| `assets/img/motto.webp` | Photo on Folder 01, card 05 (My motto) |
-| `assets/img/loreal-products.webp` | Photo on the L'Oréal Paris card |
-| `assets/brand/loreal-paris-logo.png` | Logo on the L'Oréal Paris card |
+| `assets/img/motto.webp` | Photo on Folder 01, "My motto" card |
 | `assets/og-image.png` | Preview image shown when the link is shared (1200 × 630) |
 | `assets/Karthik_J_Resume.pdf` | The résumé every CV link points to |
 | `assets/resume.pdf` | Identical copy at the résumé's old address, so older links keep working (replace both together) |
@@ -41,7 +39,7 @@ python3 -m http.server 8123
 ## Publishing
 
 ```bash
-cd ~/Documents/loreal-cv && ./tools/publish.sh "What changed"
+cd /path/to/imkarthi7.github.io && ./tools/publish.sh "What changed"
 ```
 
 GitHub rebuilds the site in about a minute. Visitors may need a hard refresh (Cmd+Shift+R) to see it.

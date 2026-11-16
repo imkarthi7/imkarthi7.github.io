@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Karthik OS</title>
-<meta name="description" content="Karthik's creative CV for L'Oréal, played as an 8-bit game.">
+<meta name="description" content="Karthik's creative CV, played as an 8-bit game.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://imkarthi7.github.io/">
-<meta property="og:title" content="Karthik OS · Creative CV for L'Oréal">
+<meta property="og:title" content="Karthik OS · Creative CV">
 <meta property="og:description" content="A creative CV, played as an 8-bit game.">
 <meta property="og:image" content="https://imkarthi7.github.io/assets/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Pixel-art Karthik beside the words KARTHIK OS, Creative CV for L'Oréal">
+<meta property="og:image:alt" content="Pixel-art Karthik beside the words KARTHIK OS, Creative CV">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,7 +21,7 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;700&family=Archivo:wght@400;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;700&family=Archivo:wght@400;700;800&display=swap"></noscript>
 <style>
-/* Single deliberate look: paper-white desk, ink black, L'Oréal gold. */
+/* Single deliberate look: paper-white desk, ink black, warm gold. */
 :root {
   color-scheme: light;
   --ink: #0d0d0e;
@@ -449,7 +449,7 @@ li.todo::before { display: none; }
   </header>
   <main class="desk-main" id="desk">
     <div class="hello">
-      <p class="eyebrow">Creative CV · for L'Oréal</p>
+      <p class="eyebrow">Creative CV</p>
       <h1>Choose a <em>file</em>, Player 2</h1>
       <p class="lede">Click a folder to open it, or walk Karthik over if you'd like to play. Three rooms, one person.</p>
     </div>
@@ -565,6 +565,15 @@ const FOLDERS = [
         body: ["My parents always trusted me to make my own choices, so I made them: Electrical Engineering, leaving a stable job for an MBA, moving from Kerala to Ahmedabad, and chasing an off-campus FMCG sales internship because I wanted to work close to consumers."],
       },
       {
+        tag: "WHAT DRIVES ME",
+        title: "Being seen",
+        body: [
+          "I grew up apprehensive about my skin tone, often wondering if people would see me differently because I was dark-skinned. But the people around me saw much more than that — they valued the energy I brought, the friendships I built and the way I showed up for them.",
+          "What you carry within you eventually finds a way to show on the outside. As Elisabeth Kübler-Ross wrote, \"People are like stained-glass windows.\" Their true beauty comes through when there is light from within.",
+          "I want to make people feel seen the way the people around me made me feel seen.",
+        ],
+      },
+      {
         tag: "LEVEL 2",
         title: "MICA",
         body: ["MICA was the first time I left home. I knew very little Hindi and had no idea how I'd fit in. So I started talking. From organising an Onam Sadhya for 400+ people to waking up at 5 a.m. for a Rajinikanth first-day-first-show, MICA let me be fully myself. Somewhere along the way, I found sales: people, problem-solving and the thrill of figuring things out."],
@@ -595,37 +604,51 @@ const FOLDERS = [
     ],
   },
   {
-    id: "beauty",
-    name: "The Beauty Engine",
-    eyebrow: "Folder 02 · Beauty & the brand I relate to",
-    intro: "What beauty means to me, and the brand that earned my trust.",
-    emblem: "lipstick",
+    id: "work",
+    name: "Work Log",
+    eyebrow: "Folder 02 · Experience & what I've shipped",
+    intro: "The roles I've played, the brands I've worked on, and the problems I've chased on the ground.",
+    emblem: "briefcase",
     cards: [
       {
-        tag: "PHILOSOPHY",
-        title: "What beauty means",
-        body: [
-          "I grew up being apprehensive about my skin tone, often wondering if people would see me differently because I was dark-skinned. But the people around me made me realise that they saw much more than that. They valued me for who I was — the energy I brought, the friendships I built and the way I showed up for them.",
-          "For me, that is beauty. What you carry within you eventually finds a way to show on the outside. As Elisabeth Kübler-Ross wrote, \"People are like stained-glass windows.\" Their true beauty comes through when there is light from within.",
-          "And I want to make people feel seen the way the people around me made me feel seen.",
+        tag: "CURRENT RUN",
+        title: "Assistant Brand Manager · RSPL Group",
+        body: ["I'm the sole brand custodian for Lovingle, RSPL's ~₹80 Cr diaper brand, working day-to-day with the Category Manager and CMO."],
+        sections: [
+          { heading: "WHAT I OWN", text: "Brand P&L, pricing and margin inputs, and the Lovingle positioning document — target consumer, insight, proposition and tone. I also track primary and secondary sales by SKU and channel for leadership reviews." },
+          { heading: "THE BIG QUEST", text: "Co-building the launch of RSPL's first baby wash across ~15,000 GT outlets in two states — competitor benchmarking, pricing and channel strategy, and launch readiness across packaging, artwork and product codes." },
+          { heading: "ON THE GROUND", text: "Monthly market immersions in UP and Delhi with distributors, 100+ retailers and consumers. I manage three agencies — creative, digital and PR — writing briefs and giving creative feedback." },
         ],
       },
       {
-        tag: "BRAND I RELATE TO",
-        title: "L'Oréal Paris",
-        logo: { src: "assets/brand/loreal-paris-logo.png", alt: "L'Oréal Paris" },
-        image: { src: "assets/img/loreal-products.webp", alt: "My own L'Oréal Paris products: Hyaluron Pure 72H Purifying Shampoo, Extraordinary Oil Serum, Hyaluron Moisture 72H Moisture Sealing Conditioner" },
-        body: ["My entry into L'Oréal Paris was through the Extraordinary Oil Serum. A friend recommended it, I tried it, and I loved how it made my hair smooth without weighing it down."],
+        tag: "BOSS LEVEL",
+        title: "Nestlé · Maggi Korean Noodles",
+        body: ["My Sales & Marketing internship at Nestlé (Chennai) was a full GTM project: why is Maggi Korean Noodles underperforming versus competitors, and how do we fix it?"],
+        sections: [
+          { heading: "THE DIG", text: "50+ MT and GT store visits across Chennai and Kerala, 200+ consumer and trade interviews, 85 survey responses and social listening — to find the real gaps in trial, taste and visibility." },
+          { heading: "WHAT I FOUND", text: "A strong brand name but low awareness and trial; shelves where shopkeepers didn't even know the variant existed; and a taste read as \"too Indian\" next to Nissin and Samyang." },
+          { heading: "THE PLAY", text: "A relaunch across the 4Ps — authentic Korean variants (Kimchi, Gochujang), a ₹50 trial SKU to take on Nissin, weighted MT + Q-commerce distribution, and a K-wave, influencer-led story instead of a celebrity drop." },
+          { heading: "ALSO", text: "Led and trained 12 field interns across 6 regions on MT visibility, retailer negotiations and SOP adherence." },
+        ],
       },
       {
-        tag: "WHY IT STUCK",
-        title: "Trust, earned",
-        body: ["After that, I started trying more L'Oréal Paris products — the Hyaluron shampoo and conditioner, among others. I realised I was choosing the brand almost without thinking about it. Good experiences built trust, and when I tried something new, it met my expectations."],
+        tag: "SIDE QUESTS",
+        title: "Before the MBA",
+        sections: [
+          { heading: "SYNNEFX HEALTH TECHNOLOGIES — PROJECT ENGINEER", text: "Prospected and onboarded 10+ healthcare clients across Kerala and ran 25+ product demos for B2B clients, closing 3 long-term renewals through consultative selling." },
+          { heading: "TATA CONSULTANCY SERVICES — ASSISTANT SYSTEM ENGINEER", text: "Supported Azure cost tracking for enterprise clients and authored technical documentation that cut onboarding time by ~25%." },
+        ],
       },
       {
-        tag: "PROOF OF CLAIM",
-        title: "What we share",
-        body: ["That is something I believe in too: deliver what you promise."],
+        tag: "ACHIEVEMENTS",
+        title: "Trophies & projects",
+        list: [
+          "National Finalist & Campus Winner — Top 13 of 3,293 teams, Pink Pitch by Rajasthan Royals.",
+          "National Semi-Finalist — Top 60 of 2,500 teams, Big Idea Challenge by V-Guard.",
+          "National Semi-Finalist — Top 60 of 24,417 teams, Finclusion Challenge by Muthoot.",
+          "OpenGrad Foundation — drove 625+ conversions and built cohort-tracking for a 57% funnel success rate.",
+          "MICANVAS — secured ₹7L+ in sponsorships (HDFC Bank, Indian Oil, UCB, Phab) for the flagship fest.",
+        ],
       },
     ],
   },
@@ -771,7 +794,7 @@ const heroFrames = () => (innerWidth <= 560 ? F3 : F4);
 
 const EMBLEMS = {
   person: ["..GGGG..", "..GGGG..", "..GGGG..", "...GG...", ".GGGGGG.", "GGGGGGGG", "GGGGGGGG", "GGGGGGGG"],
-  lipstick: ["....GG..", "...GGG..", "...GGG..", "..WWWW..", "..GGGG..", "..GGGG..", "..GGGG..", "..GGGG.."],
+  briefcase: ["..GGGG..", "..G..G..", "GGGGGGGG", "GGGGGGGG", "GGGWWGGG", "GGGGGGGG", "GGGGGGGG", "GGGGGGGG"],
   chart: ["......GG", "......GG", "...GG.GG", "...GG.GG", "GG.GG.GG", "GG.GG.GG", "GG.GG.GG", "WWWWWWWW"],
 };
 function folderSVG(emblem) {
